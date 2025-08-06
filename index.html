@@ -6,11 +6,18 @@
     <title>Kanji-Raster Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Kanji-Raster Generator</h1>
+    <div id="kanjiLogo"></div>
+    <!-- <h1 id="mainTitelKana">カンジラスタージェネレーター</h1> -->
+
 
     <label>Kanji: <input type="text" id="kanjiInput"></label>
     <label>On: <input type="text" id="onInput"></label>
@@ -39,6 +46,19 @@
                 svgLoaded = true;
                 addNewTable(); // erste Tabelle automatisch laden
             });
+
+        const logoDiv = document.getElementById("kanjiLogo");
+
+        const img = document.createElement("img");
+        img.src = "kanjiLogo.svg";
+        img.alt = "Kanji Logo";
+        img.style.width = "500px"; // Optional: Breite anpassen
+        img.style.height = "auto"; // Höhe automatisch
+        img.style.display = "block"; // Optional: Block-Element für bessere Zentrierung
+        img.style.margin = "0 auto"; // Optional: Zentrieren
+
+        logoDiv.appendChild(img);
+
 
 
         function addNewTable() {

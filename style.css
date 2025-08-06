@@ -1,10 +1,16 @@
 body {
-    font-family: sans-serif;
+    font-family: "Noto Sans JP", sans-serif;
     padding: 20px;
 }
 
 input {
     margin: 5px;
+}
+
+#mainTitelKana {
+    text-align: center;
+    font-size: 1em;
+    color: #00000085;
 }
 
 #svg-pages {
@@ -21,6 +27,7 @@ input {
     max-width: 1000px;
     margin: 0 auto 10px auto;
 }
+
 svg text {
     pointer-events: none;
 }
