@@ -18,20 +18,34 @@
     <div id="kanjiLogo"></div>
     <!-- <h1 id="mainTitelKana">カンジラスタージェネレーター</h1> -->
 
-
-    <label>Kanji: <input type="text" id="kanjiInput"></label>
-    <label>On: <input type="text" id="onInput"></label>
-    <label>Kun: <input type="text" id="kunInput"></label>
-    <label>Romaji: <input type="text" id="romajiInput"></label>
-
-    <button onclick="fillSVG()">Eintragen</button>
-    <button onclick="downloadPDF()">Als PDF speichern</button>
-    <button onclick="window.print()">Drucken</button>
-
-    <button onclick="addNewTable()">+ Neue Tabelle</button>
-    <div id="svg-pages">
-        <!-- Hier erscheinen mehrere SVGs -->
-    </div>
+    <div class="form-container">
+        <div class="input-group">
+          <label>Kanji:
+            <input type="text" id="kanjiInput">
+          </label>
+          <label>Romaji:
+            <input type="text" id="romajiInput">
+          </label>
+          <label>Kun:
+            <input type="text" id="kunInput">
+          </label>
+          <label>On:
+            <input type="text" id="onInput">
+          </label>
+        </div>
+      
+        <div class="button-group">
+          <button onclick="fillSVG()">Eintragen</button>
+          <button onclick="downloadPDF()">Als PDF speichern</button>
+          <button onclick="window.print()">Drucken</button>
+          <button onclick="addNewTable()">+ Neue Tabelle</button>
+        </div>
+      
+        <div id="svg-pages">
+          <!-- Hier erscheinen mehrere SVGs -->
+        </div>
+      </div>
+      
 
 
     <script>

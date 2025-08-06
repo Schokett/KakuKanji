@@ -31,3 +31,76 @@ input {
 svg text {
     pointer-events: none;
 }
+
+.form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    font-family: 'Inter', sans-serif;
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.input-group label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.input-group input[type="text"] {
+    padding: 10px 14px;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input[type="text"]:focus {
+    border-color: #7e5bef;
+    box-shadow: 0 0 0 3px rgba(126, 91, 239, 0.2);
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.button-group button {
+    background-color: #7e5bef;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-group button:hover {
+    background-color: #6845d6;
+    transform: scale(1.03);
+}
+
+.button-group button:active {
+    background-color: #593bc0;
+    transform: scale(0.97);
+}
+
+#svg-pages {
+    margin-top: 32px;
+}
+
