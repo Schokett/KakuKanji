@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kanji-Raster Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        input {
+            margin: 5px;
+        }
+
+        #svg-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 1000px;
+            /* oder beliebig */
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #svg-container svg {
+            width: 100%;
+            height: auto;
+        }
+
+        svg text {
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kanji-Raster Generator</h1>
+
+    <label>Kanji: <input type="text" id="kanjiInput"></label>
+    <label>On: <input type="text" id="onInput"></label>
+    <label>Kun: <input type="text" id="kunInput"></label>
+    <label>Romaji: <input type="text" id="romajiInput"></label>
+    <button onclick="fillSVG()">Eintragen</button>
+    <button onclick="downloadPDF()">Als PDF speichern</button>
+    <button onclick="window.print()">Drucken</button>
+
+    <div id="svg-container">
+        <!-- SVG wird hier geladen -->
+    </div>
+
+    <script>
+        let svgLoaded = false;
+
+        // SVG laden
+        fetch('KanjiRaster.svg')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("svg-container").innerHTML = data;
+                svgLoaded = true;
+            });
+
+        function fillSVG() {
+            if (!svgLoaded) {
+                alert("Bitte warten – SVG wird noch geladen.");
+                return;
+            }
+
+            const kanji = document.getElementById("kanjiInput").value;
+            const on = document.getElementById("onInput").value;
+            const kun = document.getElementById("kunInput").value;
+            const romaji = document.getElementById("romajiInput").value;
+
+            const ids = [
+                ["MainKanji", kanji],
+                ["OnLesung", on],
+                ["KunLesung", kun],
+                ["Romaji", romaji],
+                ["Kanjitr", kanji],
+                ["Kanjitr1", kanji],
+                ["Kanjitr2", kanji],
+                ["Kanjitr3", kanji],
+                ["Kanjitr4", kanji],
+                ["Kanjitr5", kanji],
+                ["Kanjitr6", kanji],
+                ["Kanjitr7", kanji],
+                ["Kanjitr8", kanji],
+                ["Kanjitr9", kanji],
+            ];
+
+            ids.forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            });
+        }
+
+        async function downloadPDF() {
+            if (!svgLoaded) {
+                alert("Bitte warte, bis das SVG vollständig geladen ist.");
+                return;
+            }
+
+            const svgContainer = document.getElementById("svg-container");
+            const canvas = await html2canvas(svgContainer, { useCORS: true });
+            const imgData = canvas.toDataURL("image/png");
+
+            const { jsPDF } = window.jspdf;
+
+            // A4-Größe
+            const pdfWidth = 210;
+            const pdfHeight = 297;
+            const margin = 10; // Seitenrand in mm
+
+            // Bildgröße in mm
+            const imgWidthMm = canvas.width * 0.2646;
+            const imgHeightMm = canvas.height * 0.2646;
+
+            // Nutzbare Fläche in A4
+            const usableWidth = pdfWidth - margin * 2;
+            const usableHeight = pdfHeight - margin * 2;
+
+            // Maßstab berechnen, sodass Bild in die nutzbare Fläche passt
+            const scale = Math.min(usableWidth / imgWidthMm, usableHeight / imgHeightMm);
+
+            const scaledWidth = imgWidthMm * scale;
+            const scaledHeight = imgHeightMm * scale;
+
+            // Zentriert mit Rand platzieren
+            const marginX = (pdfWidth - scaledWidth) / 2;
+            const marginY = (pdfHeight - scaledHeight) / 2;
+
+            // PDF erzeugen und Bild einfügen
+            const pdf = new jsPDF("portrait", "mm", "a4");
+            pdf.addImage(imgData, "PNG", marginX, marginY, scaledWidth, scaledHeight);
+            pdf.save("kanji-raster.pdf");
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
