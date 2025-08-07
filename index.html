@@ -37,7 +37,7 @@
         <div class="button-group">
           <button onclick="fillSVG()">Eintragen</button>
           <button onclick="downloadPDF()">Als PDF speichern</button>
-          <button onclick="window.print()">Drucken</button>
+          <button onclick="printPDF()">Drucken</button>
           <button onclick="addNewTable()">+ Neue Tabelle</button>
         </div>
       
@@ -166,6 +166,61 @@
 
             pdf.save("kanji-raster.pdf");
         }
+
+        async function printPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("portrait", "mm", "a4");
+
+    const containers = document.querySelectorAll(".svg-container");
+
+    const tablesPerPage = 5;
+    const spacing = 5; // Abstand zwischen SVGs in mm
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 10;
+
+    const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
+    const singleHeight = usableHeight / tablesPerPage;
+    const usableWidth = pageWidth - 2 * margin;
+
+    for (let i = 0; i < containers.length; i++) {
+        const canvas = await html2canvas(containers[i], { useCORS: true });
+        const imgData = canvas.toDataURL("image/png");
+
+        const imgWidthMm = canvas.width * 0.2646;
+        const imgHeightMm = canvas.height * 0.2646;
+
+        const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+        const scaledWidth = imgWidthMm * scale;
+        const scaledHeight = imgHeightMm * scale;
+
+        const columnX = margin + (usableWidth - scaledWidth) / 2;
+        const row = i % tablesPerPage;
+        const columnY = margin + row * (scaledHeight + spacing);
+
+        if (i > 0 && row === 0) {
+            pdf.addPage();
+        }
+
+        pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+    }
+
+    // PDF als Blob erzeugen
+    const pdfBlob = pdf.output("blob");
+
+    // URL für Blob erstellen
+    const blobUrl = URL.createObjectURL(pdfBlob);
+
+    // Neues Fenster / Tab öffnen mit PDF-Viewer und Druckdialog starten
+    const printWindow = window.open(blobUrl);
+
+    // Sobald das Fenster geladen ist, Druckdialog auslösen
+    printWindow.onload = function () {
+        printWindow.focus();
+        printWindow.print();
+    };
+}
+
 
     </script>
 </body>
