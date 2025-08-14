@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -526,19 +528,36 @@
 
         // Button zum Löschen aller Tabellen
         document.getElementById('deleteAllBtn').addEventListener('click', () => {
-    const confirmDelete = confirm("Bist du sicher, dass du **alle Tabellen** löschen möchtest?");
-    if (!confirmDelete) return; // Abbrechen, wenn Nutzer "Abbrechen" klickt
+            const confirmDelete = confirm("Bist du sicher, dass du **alle Tabellen** löschen möchtest?");
+            if (!confirmDelete) return; // Abbrechen, wenn Nutzer "Abbrechen" klickt
 
-    const allTables = document.querySelectorAll('.svg-container');
-    allTables.forEach(table => table.remove()); // alle Tabellen löschen
+            const allTables = document.querySelectorAll('.svg-container');
+            allTables.forEach(table => table.remove()); // alle Tabellen löschen
 
-    // Dropdown leeren
-    selector.innerHTML = '';
+            // Dropdown leeren
+            selector.innerHTML = '';
 
-    // Optional: Eine neue Tabelle automatisch erstellen
-    addNewTable();
+            // Optional: Eine neue Tabelle automatisch erstellen
+            addNewTable();
 
-    markActiveTable(); // Aktive Tabelle markieren
+            markActiveTable(); // Aktive Tabelle markieren
+        });
+
+        // #svg-pages sortierbar machen
+        const svgPagesContainer = document.getElementById('svg-pages');
+
+        const sortable = new Sortable(svgPagesContainer, {
+    animation: 150,
+    handle: '.svg-container', // die gesamte Tabelle verschiebbar
+    draggable: '.svg-container',
+    onStart: function(evt) {
+        evt.item.classList.add('dragging');
+    },
+    onEnd: function(evt) {
+        evt.item.classList.remove('dragging');
+        updateTableSelector();
+        markActiveTable();
+    }
 });
 
 
