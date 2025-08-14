@@ -6,6 +6,8 @@
     <title>Kanji-Raster Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,6 +79,13 @@
                 </svg>
                 </svg>Tabelle löschen</button>
 
+
+        </div>
+        <div class="fileUploudContainer">
+            <label>Datei hochladen (XML oder Excel):
+                <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
+            </label>
+            <button onclick="importFile()">Importieren</button>
         </div>
 
         <div class="select-group">
@@ -367,6 +376,63 @@
                 input.placeholder = originalPlaceholder;
             });
         });
+
+        // ==============================
+        // Datei importieren (XML oder Excel)
+        // ==============================
+        function importFile() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) {
+                alert("Keine Datei ausgewählt!");
+                return;
+            }
+
+            // Prüfen, ob die Datei ein unterstütztes Format ist
+            const isExcelLike = file.name.endsWith(".xlsx") || file.name.endsWith(".xls") || file.name.endsWith(".xml");
+
+            if (!isExcelLike) {
+                alert("Nur Excel-Dateien (.xlsx, .xls) oder Excel-XML (.xml) werden unterstützt.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // Datei als ArrayBuffer für SheetJS einlesen
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // Erstes Tabellenblatt auslesen
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // Falls die erste Zeile nur Überschriften enthält → bei Zeile 1 starten
+                for (let i = 0; i < json.length; i++) {
+                    const values = json[i];
+                    if (!values || values.length === 0) continue; // Überspringen, wenn leer
+
+                    // Neue Tabelle anlegen
+                    addNewTable();
+                    selector.value = selector.options[selector.options.length - 1].value;
+
+                    // Input-Felder befüllen
+                    document.getElementById("kanjiInput").value = values[0] || "";
+                    document.getElementById("romajiInput").value = values[1] || "";
+                    document.getElementById("kunInput").value = values[2] || "";
+                    document.getElementById("onInput").value = values[3] || "";
+
+                    // SVG befüllen
+                    fillSVG();
+                }
+
+                markActiveTable();
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+
+
+
     </script>
 
 </body>
