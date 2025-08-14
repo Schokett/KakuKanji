@@ -94,7 +94,7 @@
     <div id="footer-container">
         <footer>
             <p>© PixSez Designs 2023</p>
-            
+
         </footer>
 
     </div>
@@ -316,6 +316,17 @@
             };
         }
 
+        document.querySelectorAll('.input-group input[type="text"]').forEach(input => {
+            const originalPlaceholder = input.placeholder;
+
+            input.addEventListener('focus', () => {
+                input.placeholder = '';
+            });
+
+            input.addEventListener('blur', () => {
+                input.placeholder = originalPlaceholder;
+            });
+        });
 
     </script>
 </body>
