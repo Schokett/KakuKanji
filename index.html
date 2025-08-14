@@ -22,7 +22,10 @@
 </head>
 
 <body>
+
     <div id="kanjiLogo"></div>
+
+
 
     <!-- <h1 id="mainTitelKana">カンジラスタージェネレーター</h1> -->
 
@@ -83,22 +86,44 @@
 
 
         </div>
-
-
-        <!-- <div class="fileUploadContainer" id="fileDropArea">
-            <p id="fileDropText">Datei hierher ziehen oder klicken zum Auswählen</p>
-            <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
-            <button type="button" id="importBtn">Importieren</button>
-        </div> -->
-
-        <div class="fileUploadContainer" id="fileDropArea">
-            <p id="fileDropText">Datei hierher ziehen oder klicken zum Auswählen</p>
-            <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
+         
+        <div class="DropZone">
+            <div class="dropzone-content">
+                <div class="fileUploadContainer" id="fileDropArea">
+                    <p id="fileDropText">Datei hierher ziehen oder klicken zum Auswählen</p>
+                    <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
+                </div>
+        
+                <div class="import-container">
+                    <button type="button" id="importBtn">Importieren</button>
+                </div>
+            </div>
+        
+            <!-- Icon + Tooltip als eigener Container -->
+            <div class="info-container">
+                <svg class="info-icon" width="24px" height="24px" viewBox="0 0 378 378" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="matrix(1.02165,0,0,1.02165,-9.29616,-14.0051)">
+                        <circle cx="194.071" cy="198.68" r="179.273" style="fill:rgb(128,128,128);" />
+                    </g>
+                    <g transform="matrix(1,0,0,1,22.8659,16.9821)">
+                        <text x="90.485px" y="289.651px"
+                            style="font-family:'NotoSansJP-Medium', 'Noto Sans JP', sans-serif;font-weight:500;font-size:312.5px;fill:rgb(235,235,235);">?</text>
+                    </g>
+                </svg>
+        
+                <div class="tooltip">
+                    <img src="sampel.png" alt="Beschreibung">
+                    <p>
+                        Ziehe deine <span class="file-format">.xlsx</span>, 
+                        <span class="file-format">.xls</span> oder 
+                        <span class="file-format">.xml</span>-Dateien hierher, um sie automatisch in Raster umzuwandeln.<br><br>
+                        Achte dabei auf die <strong>korrekte Reihenfolge der Zellen</strong> – 
+                        der <strong>erste Eintrag jeder Spalte</strong> wird ebenfalls übernommen.
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <div class="import-container">
-            <button type="button" id="importBtn">Importieren</button>
-        </div>
+        
 
 
 
@@ -132,13 +157,14 @@
     <!-- <a href="impressum.html" target="_blank" style="position: fixed; bottom: 10px; right: 10px; font-size: 14px; color: gray;">ℹ️</a> -->
     <a href="impressum.html" target="_blank" id="impressumBtn" title="Impressum">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" viewBox="0 0 256 256">
-            <path d="M128 24A104 104 0 1 0 232 128 104.11791 104.11791 0 0 0 128 24Zm0 48a12 12 0 1 1-12 12 12 12 0 0 1 12-12Zm16 120a8 8 0 0 1-16 0v-48a8 8 0 0 1 16 0Zm0 0"/>
+            <path
+                d="M128 24A104 104 0 1 0 232 128 104.11791 104.11791 0 0 0 128 24Zm0 48a12 12 0 1 1-12 12 12 12 0 0 1 12-12Zm16 120a8 8 0 0 1-16 0v-48a8 8 0 0 1 16 0Zm0 0" />
         </svg>
     </a>
-    
+
 
     <script src="script.js"></script>
-    
+
 </body>
 
 </html>
