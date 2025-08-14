@@ -1,36 +1,36 @@
 body {
     font-family: "Noto Sans JP", sans-serif !important;
-    /* padding: 20px; */
-    /* background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23e0e0e0'/%3E%3C/svg%3E"); */
-    /* background-repeat: repeat;
-    background-size: 20px 20px; */
-    /* background-color: #fefefe; */
     background-image: background-color: #ffffff;
     background-image: url('endless-clouds.svg');
-    background-repeat: repeat; /* wiederholen in beide Richtungen */
-  background-size: auto; /* oder z. B. 50px 50px für Kacheln */
-    
+    background-repeat: repeat;
+    background-size: auto;
+
 }
+
 ::placeholder {
-    color: #888; /* gut lesbares Grau */
-    font-style: italic; /* optional */
-  }
-  
+    color: #888;
+    /* gut lesbares Grau */
+    font-style: italic;
+    /* optional */
+}
+
 
 input {
     margin: 5px;
     font-family: "Noto Sans JP", sans-serif !important;
 }
+
 label {
     font-family: "Noto Sans JP", sans-serif !important;
     font-weight: 500;
     color: #333;
 }
+
 #kanjiLogo {
     background-color: rgba(255, 255, 255, 0.85);
     padding: 12px 20px;
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 #mainTitelKana {
@@ -40,17 +40,19 @@ label {
 }
 
 #svg-pages {
-    box-sizing: border-box;  /* wichtig, damit Padding zur max-width gehört */
+    box-sizing: border-box;
+    /* wichtig, damit Padding zur max-width gehört */
     max-width: 600px;
     width: 100%;
     margin: 20px auto 0 auto;
-    padding: 0 10px;onal */
+    padding: 0 10px;
+    onal */
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .svg-container {
@@ -60,14 +62,15 @@ label {
     max-width: 1000px;
     margin: 0 auto 10px auto;
     border: 2px solid transparent;
-  
+
 }
 
 .svg-container.active {
-    border-color: rgba(115, 0, 0, 0.445); /* z.B. blau */
+    border-color: rgba(115, 0, 0, 0.445);
+    /* z.B. blau */
     box-shadow: 0 0 10px rgba(116, 0, 0, 0.288);
     background-color: #ffe6e634;
-  }
+}
 
 svg text {
     pointer-events: none;
@@ -106,10 +109,13 @@ svg text {
     font-size: 1rem;
     transition: all 0.3s ease;
 }
+
 .input-group input[type="text"]:focus {
-    border-color: rgb(155, 0, 0); /* z.B. rot passend zu deinen Buttons */
+    border-color: rgb(155, 0, 0);
+    /* z.B. rot passend zu deinen Buttons */
     box-shadow: 0 0 0 3px rgba(155, 0, 0, 0.2);
-    outline: none; /* entfernt den Standard-Fokus-Rahmen */
+    outline: none;
+    /* entfernt den Standard-Fokus-Rahmen */
 }
 
 
@@ -131,17 +137,18 @@ svg text {
     transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: white;
     box-shadow:
-      inset 0 1px 0 0 rgba(255,255,255,0.4);
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
     transform-origin: center center;
     will-change: transform;
     backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .button-group button:hover {
     background-color: rgb(116, 0, 0);
     transition: all 0.3s ease-in-out;
-    transform: scale(1.05); /* hier Zoom-Effekt */
+    transform: scale(1.05);
+    /* hier Zoom-Effekt */
 }
 
 #svg-pages {
@@ -184,15 +191,17 @@ svg text {
 #footer-container {
     text-align: center;
     padding: 1em;
-} 
- .icon {
+}
+
+.icon {
     width: 20px;
     height: 20px;
     text-align: center !important;
     vertical-align: middle;
     margin-right: 8px;
     display: inline-block;
-  }
-  .white{
+}
+
+.white {
     color: white !important;
-  }
+}
