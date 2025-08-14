@@ -172,7 +172,7 @@
         </g>
         <g id="Textfelder">
             <text id="MainKanji" x="196.239px" y="510.924px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:250px;">魚</text>
-            <text id="Romaji" x="466.613px" y="156.363px" style="font-family:''MalgunGothic, sans-serif;font-size:50px;">ﬁsh</text>
+            <text id="Romaji" x="466.613px" y="156.363px" style="font-family:''MalgunGothic, sans-serif;font-size:50px;">sakana</text>
             <g transform="matrix(1,0,0,1,727.568,0)">
                 <text id="KunLesung" x="457.064px" y="157.437px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:50px;">さかな</text>
             </g>
