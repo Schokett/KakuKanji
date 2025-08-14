@@ -147,14 +147,21 @@
         // ==============================
 
         // Funktion: Aktive Tabelle markieren und scrollen
-        function markActiveTable() {
+        function markActiveTable(offset = 50) { // offset in Pixel
             const selectedId = selector.value;
             const allTables = document.querySelectorAll(".svg-container");
 
             allTables.forEach(table => {
                 if (table.dataset.tableId === selectedId) {
                     table.classList.add("active");
-                    table.scrollIntoView({ behavior: "smooth", block: "center" });
+
+                    // scrollen mit Offset
+                    const tableTop = table.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({
+                        top: tableTop - offset,
+                        behavior: 'smooth'
+                    });
+
                 } else {
                     table.classList.remove("active");
                 }
@@ -430,6 +437,17 @@
             reader.readAsArrayBuffer(file);
         }
 
+        // ==============================
+        // Scrollen zum Anfang der Seite beim Laden
+        // ==============================
+        // Ganz oben starten beim Laden
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual'; // verhindert, dass der Browser die Scrollposition merkt
+        }
+
+        window.onload = () => {
+            window.scrollTo(0, 0); // ganz oben starten
+        };
 
 
 
