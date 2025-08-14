@@ -69,7 +69,7 @@
                     </path>
                 </svg>Neue Tabelle</button>
 
-            <button onclick="addNewTable()" title="Weitere Tabelle hinzufügen"><svg class="icon white"
+            <button onclick="deleteTable()" title="Tabelle löschen"><svg class="icon white"
                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
                     <path
                         d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z">
@@ -100,102 +100,139 @@
     </div>
 
 
-
     <script>
-
-        let svgTemplateText = "";
-        let svgLoaded = false;
-
-        // SVG einmalig laden
+        // ==============================
+        // Globale Variablen & Initialisierung
+        // ==============================
+        let svgTemplateText = "";   // Vorlage für die SVG-Tabelle
+        let svgLoaded = false;      // Status, ob die SVG-Datei geladen ist
+        let tableCount = 0;         // Interner Zähler für eindeutige IDs
+        const selector = document.getElementById("tableSelector"); // Dropdown für aktive Tabelle
+    
+        // ==============================
+        // Logo einfügen
+        // ==============================
+        const logoDiv = document.getElementById("kanjiLogo");
+        const img = document.createElement("img");
+        img.src = "kanjiLogo.svg";
+        img.alt = "Kanji Logo";
+        img.style.width = "500px"; 
+        img.style.height = "auto"; 
+        img.style.display = "block"; 
+        img.style.margin = "0 auto"; 
+        logoDiv.appendChild(img);
+    
+        // ==============================
+        // SVG laden
+        // ==============================
         fetch('KanjiRaster.svg')
             .then(response => response.text())
             .then(data => {
                 svgTemplateText = data;
                 svgLoaded = true;
-                addNewTable(); // erste Tabelle automatisch laden
+                addNewTable(); // Erste Tabelle automatisch erstellen
             });
-
-        const logoDiv = document.getElementById("kanjiLogo");
-
-        const img = document.createElement("img");
-        img.src = "kanjiLogo.svg";
-        img.alt = "Kanji Logo";
-        img.style.width = "500px"; // Optional: Breite anpassen
-        img.style.height = "auto"; // Höhe automatisch
-        img.style.display = "block"; // Optional: Block-Element für bessere Zentrierung
-        img.style.margin = "0 auto"; // Optional: Zentrieren
-
-        logoDiv.appendChild(img);
-
-
-        let tableCount = 0;
-
-        const selector = document.getElementById("tableSelector");
-
-        // Funktion zum Setzen der aktiven Tabelle
+    
+        // ==============================
+        // Tabelle verwalten
+        // ==============================
+    
+        // Funktion: Aktive Tabelle markieren und scrollen
         function markActiveTable() {
             const selectedId = selector.value;
             const allTables = document.querySelectorAll(".svg-container");
-
+    
             allTables.forEach(table => {
                 if (table.dataset.tableId === selectedId) {
                     table.classList.add("active");
-                    // Optional: scrollen zur aktiven Tabelle
                     table.scrollIntoView({ behavior: "smooth", block: "center" });
                 } else {
                     table.classList.remove("active");
                 }
             });
         }
-
-        // Event-Listener für Dropdown-Auswahl
+    
+        // Event Listener für Dropdown-Änderung
         selector.addEventListener("change", markActiveTable);
-
-
+    
+        // Funktion: Neue Tabelle hinzufügen
         function addNewTable() {
             if (!svgLoaded) return;
-
+    
             const container = document.getElementById("svg-pages");
             const wrapper = document.createElement("div");
             wrapper.classList.add("svg-container");
-
-            const tableId = `table-${tableCount++}`;
+    
+            const tableId = `table-${tableCount++}`; // interne ID bleibt eindeutig
             wrapper.dataset.tableId = tableId;
-
             wrapper.innerHTML = svgTemplateText;
+    
             container.appendChild(wrapper);
-
-            const option = document.createElement("option");
-            option.value = tableId;
-            option.textContent = `Tabelle ${tableCount}`;
-            selector.appendChild(option);
-
-            selector.value = tableId;
-
-            // Aktive Tabelle markieren
+    
+            updateTableSelector();       // Dropdown aktualisieren
+            selector.value = tableId;    // Neue Tabelle automatisch auswählen
+            markActiveTable();           // Aktiv markieren
+        }
+    
+        // Funktion: Dropdown dynamisch aktualisieren
+        function updateTableSelector() {
+            const tables = document.querySelectorAll(".svg-container");
+            selector.innerHTML = ''; // alte Optionen löschen
+    
+            tables.forEach((table, index) => {
+                const option = document.createElement("option");
+                option.value = table.dataset.tableId;
+                option.textContent = `Tabelle ${index + 1}`; // Nummerierung dynamisch
+                selector.appendChild(option);
+            });
+        }
+    
+        // Funktion: Tabelle löschen
+        function deleteTable() {
+            const selectedId = selector.value;
+            const tableToDelete = document.querySelector(`.svg-container[data-table-id="${selectedId}"]`);
+            const optionToDelete = selector.querySelector(`option[value="${selectedId}"]`);
+    
+            if (tableToDelete && optionToDelete) {
+                tableToDelete.remove();
+                optionToDelete.remove();
+            }
+    
+            // Neue Auswahl festlegen
+            if (selector.options.length > 0) {
+                selector.value = selector.options[0].value;
+            } else {
+                addNewTable(); // Falls keine Tabelle übrig, neue erstellen
+            }
+    
             markActiveTable();
         }
-
+    
+        // ==============================
+        // Tabelle mit Input füllen
+        // ==============================
         function fillSVG() {
             if (!svgLoaded) {
                 alert("Bitte warten – SVG wird noch geladen.");
                 return;
             }
-
-            const selectedId = document.getElementById("tableSelector").value;
+    
+            const selectedId = selector.value;
             const allTables = document.querySelectorAll(".svg-container");
             const selectedTable = Array.from(allTables).find(t => t.dataset.tableId === selectedId);
-
+    
             if (!selectedTable) {
                 alert("Keine gültige Tabelle ausgewählt.");
                 return;
             }
-
+    
+            // Werte aus Input-Feldern holen
             const kanji = document.getElementById("kanjiInput").value;
             const on = document.getElementById("onInput").value;
             const kun = document.getElementById("kunInput").value;
             const romaji = document.getElementById("romajiInput").value;
-
+    
+            // IDs in SVG, die befüllt werden
             const ids = [
                 ["MainKanji", kanji],
                 ["OnLesung", on],
@@ -212,123 +249,111 @@
                 ["Kanjitr8", kanji],
                 ["Kanjitr9", kanji],
             ];
-
+    
             ids.forEach(([id, value]) => {
                 const el = selectedTable.querySelector(`#${id}`);
                 if (el) el.textContent = value;
             });
         }
-
-
+    
+        // ==============================
+        // PDF Export / Drucken
+        // ==============================
         async function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("portrait", "mm", "a4");
-
+    
             const containers = document.querySelectorAll(".svg-container");
-
             const tablesPerPage = 5;
             const spacing = 5; // Abstand zwischen SVGs in mm
             const pageWidth = 210;
             const pageHeight = 297;
             const margin = 10;
-
+    
             const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
             const singleHeight = usableHeight / tablesPerPage;
             const usableWidth = pageWidth - 2 * margin;
-
+    
             for (let i = 0; i < containers.length; i++) {
                 const canvas = await html2canvas(containers[i], { useCORS: true });
                 const imgData = canvas.toDataURL("image/png");
-
+    
                 const imgWidthMm = canvas.width * 0.2646;
                 const imgHeightMm = canvas.height * 0.2646;
-
-                // Verhältnis der Originalgröße beibehalten
                 const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+    
                 const scaledWidth = imgWidthMm * scale;
                 const scaledHeight = imgHeightMm * scale;
-
                 const columnX = margin + (usableWidth - scaledWidth) / 2;
                 const row = i % tablesPerPage;
                 const columnY = margin + row * (scaledHeight + spacing);
-
-                if (i > 0 && row === 0) {
-                    pdf.addPage();
-                }
-
+    
+                if (i > 0 && row === 0) pdf.addPage();
                 pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
             }
-
+    
             pdf.save("kanji-raster.pdf");
         }
-
+    
         async function printPDF() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF("portrait", "mm", "a4");
-
+    
             const containers = document.querySelectorAll(".svg-container");
-
             const tablesPerPage = 5;
-            const spacing = 5; // Abstand zwischen SVGs in mm
+            const spacing = 5;
             const pageWidth = 210;
             const pageHeight = 297;
             const margin = 10;
-
+    
             const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
             const singleHeight = usableHeight / tablesPerPage;
             const usableWidth = pageWidth - 2 * margin;
-
+    
             for (let i = 0; i < containers.length; i++) {
                 const canvas = await html2canvas(containers[i], { useCORS: true });
                 const imgData = canvas.toDataURL("image/png");
-
+    
                 const imgWidthMm = canvas.width * 0.2646;
                 const imgHeightMm = canvas.height * 0.2646;
-
                 const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+    
                 const scaledWidth = imgWidthMm * scale;
                 const scaledHeight = imgHeightMm * scale;
-
                 const columnX = margin + (usableWidth - scaledWidth) / 2;
                 const row = i % tablesPerPage;
                 const columnY = margin + row * (scaledHeight + spacing);
-
-                if (i > 0 && row === 0) {
-                    pdf.addPage();
-                }
-
+    
+                if (i > 0 && row === 0) pdf.addPage();
                 pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
             }
-
-            // PDF als Blob erzeugen
+    
             const pdfBlob = pdf.output("blob");
-
-            // URL für Blob erstellen
             const blobUrl = URL.createObjectURL(pdfBlob);
-
-            // Neues Fenster / Tab öffnen mit PDF-Viewer und Druckdialog starten
             const printWindow = window.open(blobUrl);
-
-            // Sobald das Fenster geladen ist, Druckdialog auslösen
+    
             printWindow.onload = function () {
                 printWindow.focus();
                 printWindow.print();
             };
         }
-
+    
+        // ==============================
+        // Input-Felder: Placeholder verschwinden beim Fokus
+        // ==============================
         document.querySelectorAll('.input-group input[type="text"]').forEach(input => {
             const originalPlaceholder = input.placeholder;
-
+    
             input.addEventListener('focus', () => {
                 input.placeholder = '';
             });
-
+    
             input.addEventListener('blur', () => {
                 input.placeholder = originalPlaceholder;
             });
         });
-
     </script>
+    
 </body>
 
 </html>
