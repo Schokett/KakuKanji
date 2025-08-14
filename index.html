@@ -81,12 +81,29 @@
 
 
         </div>
-        <div class="fileUploudContainer">
-            <label>Datei hochladen (XML oder Excel):
-                <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
-            </label>
-            <button onclick="importFile()">Importieren</button>
+
+
+        <!-- <div class="fileUploadContainer" id="fileDropArea">
+            <p id="fileDropText">Datei hierher ziehen oder klicken zum Auswählen</p>
+            <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
+            <button type="button" id="importBtn">Importieren</button>
+        </div> -->
+
+        <div class="fileUploadContainer" id="fileDropArea">
+            <p id="fileDropText">Datei hierher ziehen oder klicken zum Auswählen</p>
+            <input type="file" id="fileInput" accept=".xml,.xlsx,.xls">
         </div>
+
+        <div class="import-container">
+            <button type="button" id="importBtn">Importieren</button>
+        </div>
+
+
+
+
+
+
+
 
         <div class="select-group">
             <label for="tableSelector">Aktive Tabelle:
@@ -99,6 +116,10 @@
         <div id="svg-pages">
             <!-- Hier erscheinen mehrere SVGs -->
         </div>
+
+        <button type="button" id="deleteAllBtn">Alle Tabellen löschen</button>
+
+
     </div>
     <div id="copyright">
         <footer>
@@ -448,6 +469,78 @@
         window.onload = () => {
             window.scrollTo(0, 0); // ganz oben starten
         };
+
+        // ==============================
+        // Drag & Drop für Datei-Upload
+        // ==============================
+
+
+        const fileDropArea = document.getElementById('fileDropArea');
+        const fileInput = document.getElementById('fileInput');
+        const importBtn = document.getElementById('importBtn');
+        const fileDropText = document.getElementById('fileDropText');
+
+        let selectedFile = null; // Datei speichern, ohne sofort importieren
+
+        // Klick auf Bereich öffnet File Dialog
+        fileDropArea.addEventListener('click', () => fileInput.click());
+
+        // Datei auswählen (über Dialog)
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                fileDropText.textContent = `Ausgewählt: ${selectedFile.name}`;
+            }
+        });
+
+        // Drag & Drop Events
+        fileDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileDropArea.classList.add('dragover');
+        });
+
+        fileDropArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            fileDropArea.classList.remove('dragover');
+        });
+
+        fileDropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileDropArea.classList.remove('dragover');
+
+            if (e.dataTransfer.files.length > 0) {
+                selectedFile = e.dataTransfer.files[0];
+                fileInput.files = e.dataTransfer.files; // Input aktualisieren
+                fileDropText.textContent = `Ausgewählt: ${selectedFile.name}`;
+            }
+        });
+
+        // Import Button: Datei importieren
+        importBtn.addEventListener('click', () => {
+            if (!selectedFile) {
+                alert("Bitte zuerst eine Datei auswählen!");
+                return;
+            }
+            importFile(selectedFile); // importFile anpassen, dass sie die Datei als Parameter nimmt
+        });
+
+        // Button zum Löschen aller Tabellen
+        document.getElementById('deleteAllBtn').addEventListener('click', () => {
+    const confirmDelete = confirm("Bist du sicher, dass du **alle Tabellen** löschen möchtest?");
+    if (!confirmDelete) return; // Abbrechen, wenn Nutzer "Abbrechen" klickt
+
+    const allTables = document.querySelectorAll('.svg-container');
+    allTables.forEach(table => table.remove()); // alle Tabellen löschen
+
+    // Dropdown leeren
+    selector.innerHTML = '';
+
+    // Optional: Eine neue Tabelle automatisch erstellen
+    addNewTable();
+
+    markActiveTable(); // Aktive Tabelle markieren
+});
+
 
 
 
