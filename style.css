@@ -188,9 +188,21 @@ svg text {
     outline: none;
 }
 
-#footer-container {
+#footer-container {}
+
+/* #footer-container p{
+    color: #ffffff;
+    font-weight: 900;
+    -webkit-text-stroke: 0.1px rgb(119, 119, 119);
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+} */
+#copyright {
+    color: rgb(0, 0, 0);
     text-align: center;
-    padding: 1em;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .icon {
