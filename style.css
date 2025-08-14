@@ -271,3 +271,26 @@ svg text {
     background-color: rgb(192, 3, 3);
 
 }
+/* ===========================
+    ImpressumButton
+    =========================== */
+     #impressumBtn {
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 6px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        z-index: 1000;
+        text-decoration: none;
+    }
+    
+    #impressumBtn:hover svg {
+        fill: rgb(155, 0, 0);
+    }
+    
+    
+    
+    
