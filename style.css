@@ -7,23 +7,30 @@
     box-sizing: border-box;
 }
 
+html,
 body {
     font-family: "Noto Sans JP", sans-serif;
     background-color: #ffffff;
-    /* Hintergrundfarbe als Fallback */
+    /* Fallback */
     background-image: url('endless-clouds.svg');
-    /* SVG-Pattern */
     background-repeat: repeat;
     background-size: auto;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    /* gesamte Höhe */
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    /* füllt Platz zwischen Header und Footer */
 }
 
 ::placeholder {
     color: #888;
-    /* gut lesbares Grau */
     font-style: italic;
-    /* optional */
 }
 
 /* ===========================
@@ -38,7 +45,10 @@ body {
 }
 
 #kanjiLogo img {
-    width: 500px;
+    width: 80%;
+    /* flexibel */
+    max-width: 500px;
+    /* optional */
     height: auto;
 }
 
@@ -46,9 +56,10 @@ body {
       Hauptcontainer für Formulare
       =========================== */
 .form-container {
+    width: 90%;
     max-width: 600px;
-    margin: 40px auto;
-    padding: 24px;
+    margin: 2rem auto;
+    padding: 1.5rem;
     background-color: #ffffff;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
@@ -101,6 +112,14 @@ body {
 }
 
 .button-group button {
+    display: inline-flex;
+    /* Flexbox für Buttoninhalt */
+    align-items: center;
+    /* vertikal zentrieren */
+    justify-content: center;
+    /* horizontal zentrieren */
+    gap: 8px;
+    /* Abstand Icon ↔ Text */
     background-color: rgb(155, 0, 0);
     color: #fff;
     padding: 10px 18px;
@@ -110,9 +129,15 @@ body {
     cursor: pointer;
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
     transition: background-color 0.3s ease, transform 0.3s ease-in-out;
-    transform-origin: center;
-    will-change: transform;
 }
+
+.button-group button .icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+
 
 .button-group button:hover {
     background-color: rgb(116, 0, 0);
@@ -123,9 +148,9 @@ body {
       SVG Seiten & Tabellen
       =========================== */
 #svg-pages {
-    max-width: 600px;
     width: 100%;
-    margin: 32px auto 0 auto;
+    max-width: 600px;
+    margin: 2rem auto 0 auto;
     padding: 0 10px;
 }
 
@@ -145,14 +170,13 @@ body {
     background-color: #ffe6e634;
 }
 
-svg text {
-    pointer-events: none;
-}
-
 .svg-container.dragging {
     opacity: 0.8;
 }
 
+svg text {
+    pointer-events: none;
+}
 
 /* ===========================
       Select Dropdown
@@ -170,9 +194,10 @@ svg text {
 }
 
 /* ===========================
-      Footer / Copyright
+      Footer
       =========================== */
 #copyright {
+    margin-top: auto;
     color: #000;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.85);
@@ -182,48 +207,26 @@ svg text {
 }
 
 /* ===========================
-      Icons in Buttons
-      =========================== */
-.icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.white {
-    color: white !important;
-}
-
-/* ===========================
       Drag & Drop
       =========================== */
 .DropZone {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #fafafa;
     margin: 20px 0;
-    /* Abstand zu anderen Elementen */
+    position: relative;
 }
 
 .info-icon {
     position: absolute;
     right: 10px;
-    /* Abstand vom rechten Rand */
     top: 50%;
-    /* vertikal zentrieren */
     transform: translateY(-50%);
     cursor: help;
-}
-.DropZone {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Inhalt links, Icon rechts */
-    gap: 12px;
-    padding: 12px;
-    border-radius: 12px;
-    background-color: #fafafa;
-    margin: 20px 0; /* Abstand zu anderen Elementen */
-    position: relative;
 }
 
 .info-container {
@@ -237,14 +240,14 @@ svg text {
     opacity: 0;
     position: absolute;
     top: 50%;
-    left: 110%; /* rechts vom Icon */
+    left: 110%;
     transform: translateY(-50%);
     background: white;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
     width: 400px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s ease;
     z-index: 10;
 }
@@ -252,10 +255,10 @@ svg text {
 .tooltip img {
     max-width: 100%;
     height: auto;
-    display: block;      
-    margin: 0 auto 8px;  
+    display: block;
+    margin: 0 auto 8px;
     border-radius: 4px;
-    border: 3px solid #003366; 
+    border: 3px solid #003366;
 }
 
 .info-container:hover .tooltip {
@@ -263,23 +266,23 @@ svg text {
     opacity: 1;
 }
 
-
+/* ===========================
+      Datei Upload
+      =========================== */
 #fileDropArea {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 2px dashed #ccc;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    background-color: #fafafa;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    cursor: pointer;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 12px;
+    margin: 20px 0;
+    padding: 20px;
+    text-align: center;
+    background-color: #fafafa;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 #fileDropArea.dragover {
@@ -291,17 +294,18 @@ svg text {
     display: none;
 }
 
-/* Container um den Button */
 .import-container {
     display: flex;
     justify-content: center;
-    /* horizontal zentrieren */
     margin-top: 12px;
-    /* Abstand nach oben */
 }
 
-/* Dein Button */
-#importBtn {
+#importBtn,
+#deleteAllBtn {
+    display: inline-flex;       /* Flexbox für Inhalt */
+    align-items: center;        /* vertikal zentrieren */
+    justify-content: center;    /* horizontal zentrieren */
+    gap: 8px;                   /* Abstand Icon ↔ Text */
     padding: 8px 16px;
     border-radius: 8px;
     border: none;
@@ -309,47 +313,24 @@ svg text {
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-left: 8px;           /* Abstand zu anderen Buttons */
 }
 
-
-#importBtn:hover {
+#importBtn:hover,
+#deleteAllBtn:hover {
     background-color: rgb(116, 0, 0);
     transform: scale(1.05);
 }
 
-.file-format {
-    background-color: #424242;
-    color: #ffffff;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-weight: bold;
-    font-family: monospace;
+#importBtn .icon,
+#deleteAllBtn .icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
 }
-
-
 /* ===========================
-    deleteButton
-    =========================== */
-#deleteAllBtn {
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: none;
-    background-color: rgb(155, 0, 0);
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-left: 8px;
-    /* Abstand zu anderen Buttons */
-}
-
-#deleteAllBtn:hover {
-    background-color: rgb(192, 3, 3);
-
-}
-
-/* ===========================
-    ImpressumButton
-    =========================== */
+      Impressum Button
+      =========================== */
 #impressumBtn {
     position: fixed;
     bottom: 12px;
