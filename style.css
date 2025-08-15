@@ -1,6 +1,8 @@
 /* ===========================
    Grundlegende Einstellungen
    =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Klee+One&display=swap');
+
 *,
 *::before,
 *::after {
@@ -9,7 +11,7 @@
 
 html,
 body {
-    font-family: "Noto Sans JP", sans-serif;
+    font-family:"Klee One", sans-serif;
     background-color: #ffffff;
     /* Fallback */
     background-image: url('endless-clouds.svg');
@@ -92,7 +94,7 @@ main {
     border-radius: 8px;
     background-color: #f9f9f9;
     font-size: 1rem;
-    font-family: "Noto Sans JP", sans-serif;
+    font-family:"Klee One", sans-serif;
     transition: all 0.3s ease;
 }
 
@@ -113,6 +115,7 @@ main {
 }
 
 .button-group button {
+    font-family: 'Klee One', sans-serif;
     display: inline-flex;
     /* Flexbox für Buttoninhalt */
     align-items: center;
@@ -303,6 +306,7 @@ svg text {
 
 #importBtn,
 #deleteAllBtn {
+    font-family:"Klee One", sans-serif;
     display: inline-flex;       /* Flexbox für Inhalt */
     align-items: center;        /* vertikal zentrieren */
     justify-content: center;    /* horizontal zentrieren */

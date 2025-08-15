@@ -4,6 +4,20 @@
     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve" xmlns:serif="http://www.serif.com/"
     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+
+    <defs>
+        <style type="text/css">
+          @import url('https://fonts.googleapis.com/css2?family=Klee+One&display=swap');
+      
+          #MainKanji, #Romaji, #KunLesung, #OnLesung,
+          #Kanjitr, #Kanjitr1, #Kanjitr2, #Kanjitr3, #Kanjitr4,
+          #Kanjitr5, #Kanjitr6, #Kanjitr7, #Kanjitr8, #Kanjitr9 {
+            font-family: 'Klee One', sans-serif;
+          }
+        </style>
+      </defs>
+      
+
     <g transform="matrix(1,0,0,1,-139.608,-45.1195)">
         <g id="Raster">
             <g transform="matrix(1.00005,0,0,0.993291,3.3355,2.29921)">
@@ -171,43 +185,43 @@
             </g>
         </g>
         <g id="Textfelder">
-            <text id="MainKanji" x="196.239px" y="510.924px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:250px;">魚</text>
-            <text id="Romaji" x="466.613px" y="156.363px" style="font-family:''MalgunGothic, sans-serif;font-size:50px;">sakana</text>
+            <text id="MainKanji" x="196.239px" y="510.924px" style="font-size:250px;">魚</text>
+            <text id="Romaji" x="466.613px" y="156.363px" style="font-size:50px;">sakana</text>
             <g transform="matrix(1,0,0,1,727.568,0)">
-                <text id="KunLesung" x="457.064px" y="157.437px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:50px;">さかな</text>
+                <text id="KunLesung" x="457.064px" y="157.437px" style="font-size:50px;">さかな</text>
             </g>
             <g transform="matrix(1,0,0,1,1455.14,0)">
-                <text id="OnLesung" x="437.589px" y="157.437px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:50px;">ギョ</text>
+                <text id="OnLesung" x="437.589px" y="157.437px" style="font-size:50px;">ギョ</text>
             </g>
             <g transform="matrix(1,0,0,1,2,0.498199)">
-                <text id="Kanjitr" x="525.187px" y="373.209px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr" x="525.187px" y="373.209px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g  transform="matrix(1,0,0,1,185.772,0.498199)">
-                <text id="Kanjitr1" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr1" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g  transform="matrix(1,0,0,1,368.428,0.498199)">
-                <text id="Kanjitr2" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr2" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g  transform="matrix(1,0,0,1,552.084,0.498199)">
-                <text id="Kanjitr3" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr3" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g  transform="matrix(1,0,0,1,735.717,0.498199)">
-                <text id="Kanjitr4" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr4" serif:id="Kanjitr" x="525.906px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g transform="matrix(1,0,0,1,919.373,0.498199)">
-                <text id="Kanjitr5" serif:id="Kanjitr" x="524.353px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr5" serif:id="Kanjitr" x="524.353px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g transform="matrix(1,0,0,1,1099.92,0.498199)">
-                <text id="Kanjitr6" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr6" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g transform="matrix(1,0,0,1,1284.45,0.498199)">
-                <text id="Kanjitr7" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr7" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g transform="matrix(1,0,0,1,1468.45,0.498199)">
-                <text id="Kanjitr8" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr8" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
             <g transform="matrix(1,0,0,1,1653.39,0.498199)">
-                <text id="Kanjitr9" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-family:'MalgunGothic', 'Malgun Gothic', sans-serif;font-size:133.333px;fill-opacity:0.29;">魚</text>
+                <text id="Kanjitr9" serif:id="Kanjitr" x="526.545px" y="373.459px" style="font-size:133.333px;fill-opacity:0.29;">魚</text>
             </g>
         </g>
     </g>
