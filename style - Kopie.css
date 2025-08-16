@@ -1,18 +1,6 @@
-/*
-  style.css – Basis-Layout, Komponenten & Tour-Styles
-  ---------------------------------------------------
-  Struktur:
-  1) Reset & Grundlayout
-  2) Logo & Container
-  3) Formulare & Buttons
-  4) Tabellen (SVG-Wrapper)
-  5) Drag&Drop + Tooltip
-  6) Footer & Impressum
-  7) Tour-Guide & Modal
-  8) Responsive
-*/
-
-/* 1) Reset & Grundlayout */
+/* ===========================
+   Grundlegende Einstellungen
+   =========================== */
 @import url('https://fonts.googleapis.com/css2?family=Klee+One&display=swap');
 
 *,
@@ -23,8 +11,11 @@
 
 html,
 body {
-    font-family: "Klee One", sans-serif !important;
-    background: #fff url('endless-clouds.svg') repeat;
+    font-family: "Klee One", sans-serif;
+    background-color: #ffffff;
+    background-image: url('endless-clouds.svg');
+    background-repeat: repeat;
+    background-size: auto;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -42,7 +33,9 @@ main {
     font-style: italic;
 }
 
-/* 2) Logo & Container */
+/* ===========================
+      Logo
+      =========================== */
 #kanjiLogo {
     background-color: rgba(255, 255, 255, 0.85);
     padding: 12px 20px;
@@ -53,21 +46,28 @@ main {
 
 #kanjiLogo img {
     width: 80%;
+    /* flexibel */
     max-width: 500px;
+    /* optional */
     height: auto;
 }
 
+/* ===========================
+      Hauptcontainer für Formulare
+      =========================== */
 .form-container {
     width: 90%;
     max-width: 600px;
     margin: 2rem auto;
     padding: 1.5rem;
-    background: #fff;
+    background-color: #ffffff;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
 }
 
-/* 3) Formulare & Buttons */
+/* ===========================
+      Input-Gruppen
+      =========================== */
 .input-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -80,7 +80,7 @@ main {
     display: flex;
     flex-direction: column;
     font-weight: 500;
-    font-size: .95rem;
+    font-size: 0.95rem;
     color: #333;
 }
 
@@ -89,9 +89,10 @@ main {
     padding: 10px 14px;
     border: 1.5px solid #ccc;
     border-radius: 8px;
-    background: #f9f9f9;
+    background-color: #f9f9f9;
     font-size: 1rem;
-    transition: all .3s ease;
+    font-family: "Klee One", sans-serif;
+    transition: all 0.3s ease;
 }
 
 .input-group input[type="text"]:focus,
@@ -101,6 +102,9 @@ main {
     outline: none;
 }
 
+/* ===========================
+      Buttons
+      =========================== */
 .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -108,27 +112,20 @@ main {
 }
 
 .button-group button {
+    font-family: 'Klee One', sans-serif;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: rgb(155, 0, 0);
+    background-color: rgb(155, 0, 0);
     color: #fff;
     padding: 10px 18px;
-    border: 0;
+    border: none;
     border-radius: 10px;
-    font-size: .95rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
-    transition: background-color .3s ease, transform .2s ease-in-out;
-}
-
-button,
-.button-group button,
-input[type="button"],
-input[type="submit"] {
-    font-family: inherit !important;
-    /* übernimmt body-Font */
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease, transform 0.3s ease-in-out;
 }
 
 .button-group button .icon {
@@ -137,42 +134,32 @@ input[type="submit"] {
     display: inline-block;
 }
 
+
+
 .button-group button:hover {
-    background: rgb(116, 0, 0);
+    background-color: rgb(116, 0, 0);
     transform: scale(1.05);
 }
 
-/* 4) Tabellen (SVG-Wrapper) */
+/* ===========================
+      SVG Seiten & Tabellen
+      =========================== */
 #svg-pages {
     width: 100%;
     max-width: 600px;
-    margin: 2rem auto 0;
+    margin: 2rem auto 0 auto;
     padding: 0 10px;
 }
 
 .svg-container {
-    position: relative;
     padding: 10px;
     width: 100%;
     max-width: 1000px;
-    margin: 0 auto 10px;
+    margin: 0 auto 10px auto;
     border: 2px solid transparent;
     cursor: grab;
-    transition: box-shadow .2s;
-}
-
-.svg-container.active {
-    border-color: rgba(115, 0, 0, .45);
-    box-shadow: 0 0 10px rgba(116, 0, 0, .29);
-    background-color: #ffe6e634;
-}
-
-.svg-container.dragging {
-    opacity: .8;
-}
-
-svg text {
-    pointer-events: none;
+    transition: box-shadow 0.2s;
+    position: relative;
 }
 
 .table-badge {
@@ -182,13 +169,57 @@ svg text {
     padding: 4px 8px;
     border-radius: 10px;
     font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    background: rgba(26, 26, 26, .98);
+    background: rgba(26, 26, 26, 0.979);
     color: #fff;
-    pointer-events: none;
+    pointer-events: none; /* nicht anklickbar */
     z-index: 5;
+  }
+
+.svg-container.active {
+    border-color: rgba(115, 0, 0, 0.45);
+    box-shadow: 0 0 10px rgba(116, 0, 0, 0.29);
+    background-color: #ffe6e634;
 }
 
-/* 5) Drag&Drop + Tooltip */
+.svg-container.dragging {
+    opacity: 0.8;
+}
+
+svg text {
+    pointer-events: none;
+}
+
+/* ===========================
+      Select Dropdown
+      =========================== */
+.select-group {
+    margin-bottom: 16px;
+}
+
+.select-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+}
+
+/* ===========================
+      Footer
+      =========================== */
+#copyright {
+    margin-top: auto;
+    color: #000;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===========================
+      Drag & Drop
+      =========================== */
 .DropZone {
     display: flex;
     align-items: center;
@@ -196,7 +227,7 @@ svg text {
     gap: 12px;
     padding: 12px;
     border-radius: 12px;
-    background: #fafafa;
+    background-color: #fafafa;
     margin: 20px 0;
     position: relative;
 }
@@ -222,13 +253,13 @@ svg text {
     top: 50%;
     left: 110%;
     transform: translateY(-50%);
-    background: #fff;
+    background: white;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
     width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
-    transition: opacity .3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease;
     z-index: 10;
 }
 
@@ -246,7 +277,9 @@ svg text {
     opacity: 1;
 }
 
-/* Datei-Upload */
+/* ===========================
+      Datei Upload
+      =========================== */
 #fileDropArea {
     display: flex;
     flex-direction: column;
@@ -256,16 +289,16 @@ svg text {
     margin: 20px 0;
     padding: 20px;
     text-align: center;
-    background: #fafafa;
+    background-color: #fafafa;
     border: 2px dashed #ccc;
     border-radius: 12px;
     cursor: pointer;
-    transition: background-color .3s ease, border-color .3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 #fileDropArea.dragover {
     border-color: rgb(155, 0, 0);
-    background: #fff0f0;
+    background-color: #fff0f0;
 }
 
 #fileInput {
@@ -280,46 +313,46 @@ svg text {
 
 #importBtn,
 #deleteAllBtn {
+    font-family: "Klee One", sans-serif;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     padding: 8px 16px;
     border-radius: 8px;
-    border: 0;
-    background: rgb(155, 0, 0);
-    color: #fff;
+    border: none;
+    background-color: rgb(155, 0, 0);
+    color: white;
     cursor: pointer;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     margin-left: 8px;
 }
 
 #importBtn:hover,
 #deleteAllBtn:hover {
-    background: rgb(116, 0, 0);
+    background-color: rgb(116, 0, 0);
     transform: scale(1.05);
 }
 
-/* 6) Footer & Impressum */
-#copyright {
-    margin-top: auto;
-    color: #000;
-    text-align: center;
-    background: rgba(255, 255, 255, .85);
-    padding: 12px 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .15);
+#importBtn .icon,
+#deleteAllBtn .icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
 }
 
+/* ===========================
+      Impressum Button
+      =========================== */
 #impressumBtn {
     position: fixed;
     bottom: 12px;
     right: 12px;
     cursor: pointer;
-    background: rgba(255, 255, 255, .8);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 6px;
     border-radius: 6px;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
     z-index: 1000;
     text-decoration: none;
 }
@@ -328,130 +361,11 @@ svg text {
     fill: rgb(155, 0, 0);
 }
 
-/* 7) Tour-Guide & Modal */
-.tour-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, .55);
-    z-index: 9998;
-}
-
-.tour-highlight {
-    position: absolute;
-    border: 2px solid #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, .4);
-    z-index: 9999;
-    pointer-events: none;
-}
-
-.tour-popover {
-    position: absolute;
-    max-width: 360px;
-    background: #111;
-    color: #fff;
-    padding: 14px 16px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
-    z-index: 10000;
-    font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-}
-
-.tour-popover h4 {
-    margin: 0 0 8px;
-    font-size: 16px;
-}
-
-.tour-popover p {
-    margin: 0 0 12px;
-}
-
-.tour-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-}
-
-.tour-actions button {
-    appearance: none;
-    border: 0;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.tour-actions .tour-skip {
-    background: #444;
-    color: #fff;
-}
-
-.tour-actions .tour-prev {
-    background: #eee;
-}
-
-.tour-actions .tour-next {
-    background: #4f46e5;
-    color: #fff;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, .5);
-}
-
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    margin: 15% auto;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
-}
-
-.modal-content button {
-    margin: 10px;
-    padding: 6px 12px;
-    border: 0;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.modal-content #helpYes {
-    background: #4CAF50;
-    color: #fff;
-}
-
-.modal-content #helpNo {
-    background: #ccc;
-}
-
-#helpBtn {
-    position: fixed;
-    margin-top: 20px;
-    right: 20px;
-    padding: 8px 14px;
-    background: #007acc;
-    color: #fff;
-    border: 0;
-    border-radius: 6px;
-    cursor: pointer;
-    z-index: 1500;
-    font-family: "Klee One", sans-serif;
-}
-
-#helpBtn:hover {
-    background: #005a99;
-}
-
-/* 8) Responsive */
+/* ===========================
+   Responsive Anpassungen
+   =========================== */
 @media (max-width: 768px) {
+
     .input-group {
         grid-template-columns: 1fr;
     }
@@ -485,7 +399,7 @@ svg text {
         width: 100%;
         justify-content: center;
         padding: 10px;
-        font-size: .9rem;
+        font-size: 0.9rem;
     }
 
     .tooltip {
@@ -500,13 +414,13 @@ svg text {
 
     .input-group label,
     .select-group label {
-        font-size: .9rem;
+        font-size: 0.9rem;
     }
 
     .button-group button,
     #importBtn,
     #deleteAllBtn {
-        font-size: .85rem;
+        font-size: 0.85rem;
         padding: 8px;
         gap: 6px;
     }
@@ -529,4 +443,150 @@ svg text {
         flex-direction: column;
         align-items: center;
     }
+}
+
+/* ===========================
+      Kanji-Strokes
+      =========================== */
+#kanji-container svg {
+    width: 132px;
+    height: auto;
+    display: block;
+}
+
+/* ===========================
+      Tour-Guide
+      =========================== */
+/* Overlay */
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    z-index: 9998;
+}
+
+/* Fokus-Rahmen (um das Ziel-Element) */
+.tour-highlight {
+    position: absolute;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, .4);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Tooltip/Popover */
+.tour-popover {
+    position: absolute;
+    max-width: 360px;
+    background: #111;
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    z-index: 10000;
+    font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.tour-popover h4 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.tour-popover p {
+    margin: 0 0 12px;
+}
+
+.tour-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.tour-actions button {
+    appearance: none;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tour-actions .tour-skip {
+    background: #444;
+    color: #fff;
+}
+
+.tour-actions .tour-prev {
+    background: #eee;
+}
+
+.tour-actions .tour-next {
+    background: #4f46e5;
+    color: #fff;
+}
+
+/* Tour-modul */
+/* Hilfe-Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    /* ganz oben */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 15% auto;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content #helpYes {
+    background: #4CAF50;
+    color: white;
+}
+
+.modal-content #helpNo {
+    background: #ccc;
+}
+
+
+
+/* ===========================*/
+#helpBtn {
+    position: fixed;
+    margin-top: 20px;
+    right: 20px;
+    padding: 8px 14px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1500;
+}
+
+#helpBtn:hover {
+    background: #005a99;
+}
+
+#helpBtn,
+#helpModal button {
+    font-family: "Klee One", sans-serif;
 }
