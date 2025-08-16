@@ -1,8 +1,8 @@
 const scripts = [
     "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
-    "https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js",
-    "https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+    "https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"
+    // Sortable NICHT hier laden – wir laden/initialisieren es weiter unten genau einmal
 ];
 
 scripts.forEach(src => {
@@ -172,104 +172,131 @@ function fillSVG() {
         const el = selectedTable.querySelector(`#${id}`);
         if (el) el.textContent = value;
     });
+
+    if (kanji && kanji.trim()) {
+        injectKanjiIntoMain(selectedTable, kanji).catch(console.error);
+    }
 }
 
 // ==============================
 // PDF Export / Drucken
 // ==============================
+
+function ensurePDFLibs() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        throw new Error('jsPDF ist noch nicht geladen');
+    }
+    if (!window.html2canvas) {
+        throw new Error('html2canvas ist noch nicht geladen');
+    }
+}
+
 async function downloadPDF() {
+    ensurePDFLibs();
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("portrait", "mm", "a4");
 
-    // Temporär Hervorhebung entfernen
     const activeEl = document.querySelector(".svg-container.active");
     if (activeEl) activeEl.classList.remove("active");
 
-    const containers = document.querySelectorAll(".svg-container");
-    const tablesPerPage = 5;
-    const spacing = 5;
-    const pageWidth = 210;
-    const pageHeight = 297;
-    const margin = 10;
+    try {
+        const containers = document.querySelectorAll(".svg-container");
+        const tablesPerPage = 5;
+        const spacing = 5;
+        const pageWidth = 210, pageHeight = 297, margin = 10;
+        const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
+        const singleHeight = usableHeight / tablesPerPage;
+        const usableWidth = pageWidth - 2 * margin;
 
-    const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
-    const singleHeight = usableHeight / tablesPerPage;
-    const usableWidth = pageWidth - 2 * margin;
+        for (let i = 0; i < containers.length; i++) {
+            const clone = await makeOffscreenClone(containers[i]);
+            await finalizeKanjiStrokes(clone);
 
-    for (let i = 0; i < containers.length; i++) {
-        const canvas = await html2canvas(containers[i], { useCORS: true, scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
+            // Fonts/Layout sicher anwenden lassen
+            if (document.fonts && document.fonts.ready) {
+                try { await document.fonts.ready; } catch (_) { }
+            }
+            document.body.offsetHeight; // Reflow
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-        const imgWidthMm = canvas.width * 0.2646;
-        const imgHeightMm = canvas.height * 0.2646;
-        const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+            const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
+            clone.remove();
 
-        const scaledWidth = imgWidthMm * scale;
-        const scaledHeight = imgHeightMm * scale;
-        const columnX = margin + (usableWidth - scaledWidth) / 2;
-        const row = i % tablesPerPage;
-        const columnY = margin + row * (scaledHeight + spacing);
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidthMm = canvas.width * 0.2646;
+            const imgHeightMm = canvas.height * 0.2646;
+            const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
 
-        if (i > 0 && row === 0) pdf.addPage();
-        pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+            const scaledWidth = imgWidthMm * scale;
+            const scaledHeight = imgHeightMm * scale;
+            const columnX = margin + (usableWidth - scaledWidth) / 2;
+            const row = i % tablesPerPage;
+            const columnY = margin + row * (scaledHeight + spacing);
+
+            if (i > 0 && row === 0) pdf.addPage();
+            pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+        }
+
+        pdf.save("kanji-raster.pdf");
+    } finally {
+        if (activeEl) activeEl.classList.add("active");
     }
-
-    // Hervorhebung wiederherstellen
-    if (activeEl) activeEl.classList.add("active");
-
-    pdf.save("kanji-raster.pdf");
 }
 
 async function printPDF() {
+    ensurePDFLibs();
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("portrait", "mm", "a4");
 
-    // Temporär Hervorhebung entfernen
     const activeEl = document.querySelector(".svg-container.active");
     if (activeEl) activeEl.classList.remove("active");
 
-    const containers = document.querySelectorAll(".svg-container");
-    const tablesPerPage = 5;
-    const spacing = 5;
-    const pageWidth = 210;
-    const pageHeight = 297;
-    const margin = 10;
+    try {
+        const containers = document.querySelectorAll(".svg-container");
+        const tablesPerPage = 5;
+        const spacing = 5;
+        const pageWidth = 210, pageHeight = 297, margin = 10;
+        const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
+        const singleHeight = usableHeight / tablesPerPage;
+        const usableWidth = pageWidth - 2 * margin;
 
-    const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
-    const singleHeight = usableHeight / tablesPerPage;
-    const usableWidth = pageWidth - 2 * margin;
+        for (let i = 0; i < containers.length; i++) {
+            const clone = await makeOffscreenClone(containers[i]);
+            await finalizeKanjiStrokes(clone);
 
-    for (let i = 0; i < containers.length; i++) {
-        const canvas = await html2canvas(containers[i], { useCORS: true, scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
+            // Fonts/Layout sicher anwenden lassen
+            if (document.fonts && document.fonts.ready) {
+                try { await document.fonts.ready; } catch (_) { }
+            }
+            document.body.offsetHeight; // Reflow
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-        const imgWidthMm = canvas.width * 0.2646;
-        const imgHeightMm = canvas.height * 0.2646;
-        const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+            const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
+            clone.remove();
 
-        const scaledWidth = imgWidthMm * scale;
-        const scaledHeight = imgHeightMm * scale;
-        const columnX = margin + (usableWidth - scaledWidth) / 2;
-        const row = i % tablesPerPage;
-        const columnY = margin + row * (scaledHeight + spacing);
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidthMm = canvas.width * 0.2646;
+            const imgHeightMm = canvas.height * 0.2646;
+            const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
 
-        if (i > 0 && row === 0) pdf.addPage();
-        pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+            const scaledWidth = imgWidthMm * scale;
+            const scaledHeight = imgHeightMm * scale;
+            const columnX = margin + (usableWidth - scaledWidth) / 2;
+            const row = i % tablesPerPage;
+            const columnY = margin + row * (scaledHeight + spacing);
+
+            if (i > 0 && row === 0) pdf.addPage();
+            pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+        }
+
+        const blob = pdf.output("blob");
+        const url = URL.createObjectURL(blob);
+        const w = window.open(url);
+        w.onload = () => { w.focus(); w.print(); };
+    } finally {
+        if (activeEl) activeEl.classList.add("active");
     }
-
-    // Hervorhebung wiederherstellen
-    if (activeEl) activeEl.classList.add("active");
-
-    const pdfBlob = pdf.output("blob");
-    const blobUrl = URL.createObjectURL(pdfBlob);
-    const printWindow = window.open(blobUrl);
-
-    printWindow.onload = function () {
-        printWindow.focus();
-        printWindow.print();
-    };
 }
-
 
 // ==============================
 // Input-Felder: Placeholder verschwinden beim Fokus
@@ -296,9 +323,7 @@ function importFile() {
         return;
     }
 
-    // Prüfen, ob die Datei ein unterstütztes Format ist
     const isExcelLike = file.name.endsWith(".xlsx") || file.name.endsWith(".xls") || file.name.endsWith(".xml");
-
     if (!isExcelLike) {
         alert("Nur Excel-Dateien (.xlsx, .xls) oder Excel-XML (.xml) werden unterstützt.");
         return;
@@ -306,30 +331,23 @@ function importFile() {
 
     const reader = new FileReader();
     reader.onload = function (e) {
-        // Datei als ArrayBuffer für SheetJS einlesen
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
-
-        // Erstes Tabellenblatt auslesen
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        // Falls die erste Zeile nur Überschriften enthält → bei Zeile 1 starten
         for (let i = 0; i < json.length; i++) {
             const values = json[i];
-            if (!values || values.length === 0) continue; // Überspringen, wenn leer
+            if (!values || values.length === 0) continue;
 
-            // Neue Tabelle anlegen
             addNewTable();
             selector.value = selector.options[selector.options.length - 1].value;
 
-            // Input-Felder befüllen
             document.getElementById("kanjiInput").value = values[0] || "";
             document.getElementById("romajiInput").value = values[1] || "";
             document.getElementById("kunInput").value = values[2] || "";
             document.getElementById("onInput").value = values[3] || "";
 
-            // SVG befüllen
             fillSVG();
         }
 
@@ -344,24 +362,22 @@ function importFile() {
 // ==============================
 // Ganz oben starten beim Laden
 if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual'; // verhindert, dass der Browser die Scrollposition merkt
+    history.scrollRestoration = 'manual';
 }
 
 window.onload = () => {
-    window.scrollTo(0, 0); // ganz oben starten
+    window.scrollTo(0, 0);
 };
 
 // ==============================
 // Drag & Drop für Datei-Upload
 // ==============================
-
-
 const fileDropArea = document.getElementById('fileDropArea');
 const fileInput = document.getElementById('fileInput');
 const importBtn = document.getElementById('importBtn');
 const fileDropText = document.getElementById('fileDropText');
 
-let selectedFile = null; // Datei speichern, ohne sofort importieren
+let selectedFile = null;
 
 // Klick auf Bereich öffnet File Dialog
 fileDropArea.addEventListener('click', () => fileInput.click());
@@ -391,7 +407,7 @@ fileDropArea.addEventListener('drop', (e) => {
 
     if (e.dataTransfer.files.length > 0) {
         selectedFile = e.dataTransfer.files[0];
-        fileInput.files = e.dataTransfer.files; // Input aktualisieren
+        fileInput.files = e.dataTransfer.files;
         fileDropText.textContent = `Ausgewählt: ${selectedFile.name}`;
     }
 });
@@ -402,120 +418,234 @@ importBtn.addEventListener('click', () => {
         alert("Bitte zuerst eine Datei auswählen!");
         return;
     }
-    importFile(selectedFile); // importFile anpassen, dass sie die Datei als Parameter nimmt
+    importFile(); // (Funktion liest selbst aus dem <input>)
 });
 
-// Button zum Löschen aller Tabellen
-document.getElementById('deleteAllBtn').addEventListener('click', () => {
-    const confirmDelete = confirm("Bist du sicher, dass du **alle Tabellen** löschen möchtest?");
-    if (!confirmDelete) return; // Abbrechen, wenn Nutzer "Abbrechen" klickt
+// ==============================
+// Sortable EINMAL laden & initialisieren
+// ==============================
+(function loadAndInitSortableOnce() {
+    const s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js";
+    s.onload = () => {
+        const svgPagesContainer = document.getElementById('svg-pages');
+        new Sortable(svgPagesContainer, {
+            animation: 150,
+            handle: '.svg-container',
+            draggable: '.svg-container',
+            onStart: function (evt) {
+                evt.item.classList.add('dragging');
+            },
+            onEnd: function (evt) {
+                evt.item.classList.remove('dragging');
+                updateTableSelector();
+                markActiveTable();
+            }
+        });
+    };
+    document.head.appendChild(s);
+})();
 
-    const allTables = document.querySelectorAll('.svg-container');
-    allTables.forEach(table => table.remove()); // alle Tabellen löschen
-
-    // Dropdown leeren
-    selector.innerHTML = '';
-
-    // Optional: Eine neue Tabelle automatisch erstellen
-    addNewTable();
-
-    markActiveTable(); // Aktive Tabelle markieren
-});
-
-// #svg-pages sortierbar machen
-const sortableScript = document.createElement('script');
-sortableScript.src = "https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js";
-sortableScript.onload = () => {
-    const svgPagesContainer = document.getElementById('svg-pages');
-
-    const sortable = new Sortable(svgPagesContainer, {
-        animation: 150,
-        handle: '.svg-container',
-        draggable: '.svg-container',
-        onStart: function (evt) {
-            evt.item.classList.add('dragging');
-        },
-        onEnd: function (evt) {
-            evt.item.classList.remove('dragging');
-            updateTableSelector();
-            markActiveTable();
-        }
-    });
-};
-document.head.appendChild(sortableScript);
-
-// Laden des Kanji-VG 
-// Beispiel: Zugriff auf die SVG-Datei für das Kanji "魚" (Unicode U+9B5A)
+// ==============================
+// KanjiVG in separatem Container anzeigen (optional Preview)
+// ==============================
 async function loadKanjiWithNumbers(kanji) {
     const index = await fetch('kvg-index.json').then(r => r.json());
-  
+
     const uKey = 'u' + kanji.codePointAt(0).toString(16);
     const files = index[kanji] || index[uKey];
     if (!files || !files.length) throw new Error('Kein Eintrag im Index für: ' + kanji);
-  
+
     const svgFile = files[0];
-  
+
     let res = await fetch(`kanji/${svgFile}`);
     if (!res.ok) res = await fetch(svgFile);
     if (!res.ok) throw new Error(`SVG nicht gefunden: kanji/${svgFile} oder ./${svgFile}`);
-  
+
     let svgText = await res.text();
-  
-    // Alles vor <svg …> und nach </svg> wegschnippeln (verhindert sichtbare " ]>"-Reste)
+
     const start = svgText.indexOf('<svg');
     const end = svgText.lastIndexOf('</svg>');
     if (start === -1 || end === -1) throw new Error('Ungültiges SVG');
     let onlySvg = svgText.slice(start, end + 6);
-  
-    // Fehlende Namespaces ergänzen (ohne doppelt zu setzen)
+
     onlySvg = onlySvg.replace(/<svg([^>]*)>/i, (m, attrs) => {
-      let a = attrs;
-      if (!/xmlns=/.test(a)) a += ' xmlns="http://www.w3.org/2000/svg"';
-      if (!/xmlns:kvg=/.test(a)) a += ' xmlns:kvg="http://kanjivg.tagaini.net"';
-      if (!/xmlns:xlink=/.test(a)) a += ' xmlns:xlink="http://www.w3.org/1999/xlink"';
-      // optional (falls in Datei vorhanden, sonst egal):
-      if (!/xmlns:svg=/.test(a)) a += ' xmlns:svg="http://www.w3.org/2000/svg"';
-      return `<svg${a}>`;
+        let a = attrs;
+        if (!/xmlns=/.test(a)) a += ' xmlns="http://www.w3.org/2000/svg"';
+        if (!/xmlns:kvg=/.test(a)) a += ' xmlns:kvg="http://kanjivg.tagaini.net"';
+        if (!/xmlns:xlink=/.test(a)) a += ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+        if (!/xmlns:svg=/.test(a)) a += ' xmlns:svg="http://www.w3.org/2000/svg"';
+        return `<svg${a}>`;
     });
-  
+
     const doc = new DOMParser().parseFromString(onlySvg, 'image/svg+xml');
-    // Falls trotzdem Parserfehler, hier abbrechen:
     const parseError = doc.querySelector('parsererror');
     if (parseError) throw new Error(parseError.textContent || 'SVG Parse Error');
-  
+
     const svgEl = doc.documentElement;
-  
-    // Keine StrokeNumbers entfernen – du wolltest die Zahlen behalten.
-    // Optional nur wirklich störende Hilfsebenen killen:
+
     svgEl.querySelectorAll('[id*="Misc"]').forEach(n => n.remove());
-  
+
     const container = document.getElementById('kanji-container');
+    if (!container) {
+        console.warn('#kanji-container nicht gefunden – Vorschau wird übersprungen.');
+        return; // oder: Element erstellen, wenn du willst
+    }
     container.replaceChildren(document.importNode(svgEl, true));
-  
-    // Striche animieren (nur Pfade der Striche; Zahlen (<text>) bleiben unberührt)
+
+
     let strokes = container.querySelectorAll('g[id*="StrokePaths"] path');
     if (!strokes.length) strokes = container.querySelectorAll('path');
-  
+
     strokes.forEach((p, i) => {
-      const len = p.getTotalLength?.() ?? 0;
-      if (!len) return;
-      p.style.fill = 'none';
-      p.style.stroke = 'black';
-      p.style.strokeWidth = '5';
-      p.style.strokeLinecap = 'round';
-      p.style.strokeDasharray = String(len);
-      p.style.strokeDashoffset = String(len);
-      setTimeout(() => {
-        p.style.transition = 'stroke-dashoffset 0.5s ease';
-        p.style.strokeDashoffset = '0';
-      }, i * 600);
+        const len = p.getTotalLength?.() ?? 0;
+        if (!len) return;
+        p.style.fill = 'none';
+        p.style.stroke = 'black';
+        p.style.strokeWidth = '5';
+        p.style.strokeLinecap = 'round';
+        p.style.strokeDasharray = String(len);
+        p.style.strokeDashoffset = String(len);
+        setTimeout(() => {
+            p.style.transition = 'stroke-dashoffset 0.5s ease';
+            p.style.strokeDashoffset = '0';
+        }, i * 600);
     });
-  }
-  
-  // Beispiel:
-  loadKanjiWithNumbers('魚').catch(console.error);
-  
+}
+
+// Beispiel (optional):
+document.addEventListener('DOMContentLoaded', () => {
+    loadKanjiWithNumbers('魚').catch(console.error);
+});
 
 
+// ==============================
+// KanjiVG laden & als <g> zurückgeben
+// ==============================
+async function getKanjiVGGroup(kanji) {
+    const index = await fetch('kvg-index.json').then(r => r.json());
+    const uKey = 'u' + kanji.codePointAt(0).toString(16);
+    const files = index[kanji] || index[uKey];
+    if (!files || !files.length) throw new Error('Kein Eintrag im Index für: ' + kanji);
+    const svgFile = files[0];
 
+    let res = await fetch(`kanji/${svgFile}`);
+    if (!res.ok) res = await fetch(svgFile);
+    if (!res.ok) throw new Error(`SVG nicht gefunden: kanji/${svgFile} oder ./${svgFile}`);
+
+    let svgText = await res.text();
+
+    const start = svgText.indexOf('<svg');
+    const end = svgText.lastIndexOf('</svg>');
+    let onlySvg = svgText.slice(start, end + 6);
+
+    onlySvg = onlySvg.replace(/<svg([^>]*)>/i, (m, attrs) => {
+        let a = attrs;
+        if (!/xmlns=/.test(a)) a += ' xmlns="http://www.w3.org/2000/svg"';
+        if (!/xmlns:kvg=/.test(a)) a += ' xmlns:kvg="http://kanjivg.tagaini.net"';
+        if (!/xmlns:xlink=/.test(a)) a += ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+        return `<svg${a}>`;
+    });
+
+    const doc = new DOMParser().parseFromString(onlySvg, 'image/svg+xml');
+    if (doc.querySelector('parsererror')) throw new Error('SVG Parse Error');
+
+    const srcSvg = doc.documentElement;
+    const vb = (srcSvg.getAttribute('viewBox') || '0 0 109 109').split(/\s+/).map(Number);
+    const vbW = vb[2] || 109;
+    const vbH = vb[3] || 109;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+    Array.from(srcSvg.childNodes).forEach(n => {
+        if (n.nodeType === 1 || n.nodeType === 3) g.appendChild(n.cloneNode(true));
+    });
+
+    g.querySelectorAll('path').forEach(p => {
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', 'black');
+        p.setAttribute('stroke-width', '5');
+        p.setAttribute('stroke-linecap', 'round');
+    });
+
+    return { group: g, vbW, vbH };
+}
+
+// --- Einbetten in die aktive Tabelle an Stelle von #MainKanji ---
+async function injectKanjiIntoMain(selectedTable, kanjiChar) {
+    const main = selectedTable.querySelector('#MainKanji');
+    if (!main) return;
+
+    const rootSvg = selectedTable.querySelector('svg');
+    if (rootSvg && !rootSvg.getAttribute('xmlns:kvg')) {
+        rootSvg.setAttribute('xmlns:kvg', 'http://kanjivg.tagaini.net');
+    }
+
+    const box = main.getBBox();
+    const targetSize = Math.min(box.width, box.height);
+
+    const { group, vbW, vbH } = await getKanjiVGGroup(kanjiChar);
+
+    const wrapper = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    wrapper.setAttribute('id', 'KanjiVGMain');
+    wrapper.setAttribute('pointer-events', 'none');
+
+    const scale = Math.min(targetSize / vbW, targetSize / vbH);
+    const drawW = vbW * scale;
+    const drawH = vbH * scale;
+    const tx = box.x + (box.width - drawW) / 2;
+    const ty = box.y + (box.height - drawH) / 2;
+    wrapper.setAttribute('transform', `translate(${tx},${ty}) scale(${scale})`);
+
+    wrapper.appendChild(group);
+
+    selectedTable.querySelectorAll('#KanjiVGMain').forEach(n => n.remove());
+    main.parentNode.appendChild(wrapper);
+
+    main.setAttribute('opacity', '0');
+
+    const strokes = wrapper.querySelectorAll('path');
+    strokes.forEach((p, i) => {
+        const len = p.getTotalLength?.() ?? 0;
+        if (!len) return;
+        p.classList.add('kvg-stroke');
+        p.dataset.strokeLen = String(len);
+        p.style.strokeDasharray = String(len);
+        p.style.strokeDashoffset = String(len);
+        setTimeout(() => {
+            p.style.transition = 'stroke-dashoffset 0.5s ease';
+            p.style.strokeDashoffset = '0';
+        }, i * 600);
+    });
+}
+
+// finalisiert Striche in einem Root (hier auf dem KLON!)
+async function finalizeKanjiStrokes(root = document) {
+    const paths = root.querySelectorAll('.kvg-stroke, g path');
+    paths.forEach(p => {
+        p.style.transition = 'none';
+        const len = Number(p.dataset.strokeLen || p.getTotalLength?.() || 0);
+        if (len) {
+            p.style.strokeDasharray = String(len);
+            p.style.strokeDashoffset = '0';
+        }
+    });
+    document.body.offsetHeight; // reflow
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+}
+
+// erzeugt einen Offscreen-Klon eines Elements
+async function makeOffscreenClone(el) {
+    const clone = el.cloneNode(true);
+    Object.assign(clone.style, {
+        position: 'fixed',
+        left: '-100000px',   // weit außerhalb
+        top: '-100000px',
+        // WICHTIG: KEIN opacity:0 und KEIN visibility:hidden!
+        pointerEvents: 'none',
+        zIndex: '-1'
+    });
+    document.body.appendChild(clone);
+    return clone;
+}
 
