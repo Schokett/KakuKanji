@@ -530,3 +530,15 @@ svg text {
         align-items: center;
     }
 }
+
+/* während Export/Print niemals anzeigen */
+.exporting .table-badge {
+    display: none !important;
+}
+
+/* Fallback für direktes window.print() oder Browser-Print */
+@media print {
+    .table-badge {
+        display: none !important;
+    }
+}
