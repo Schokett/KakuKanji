@@ -443,3 +443,79 @@ sortableScript.onload = () => {
     });
 };
 document.head.appendChild(sortableScript);
+
+// Laden des Kanji-VG 
+// Beispiel: Zugriff auf die SVG-Datei für das Kanji "魚" (Unicode U+9B5A)
+async function loadKanjiWithNumbers(kanji) {
+    const index = await fetch('kvg-index.json').then(r => r.json());
+  
+    const uKey = 'u' + kanji.codePointAt(0).toString(16);
+    const files = index[kanji] || index[uKey];
+    if (!files || !files.length) throw new Error('Kein Eintrag im Index für: ' + kanji);
+  
+    const svgFile = files[0];
+  
+    let res = await fetch(`kanji/${svgFile}`);
+    if (!res.ok) res = await fetch(svgFile);
+    if (!res.ok) throw new Error(`SVG nicht gefunden: kanji/${svgFile} oder ./${svgFile}`);
+  
+    let svgText = await res.text();
+  
+    // Alles vor <svg …> und nach </svg> wegschnippeln (verhindert sichtbare " ]>"-Reste)
+    const start = svgText.indexOf('<svg');
+    const end = svgText.lastIndexOf('</svg>');
+    if (start === -1 || end === -1) throw new Error('Ungültiges SVG');
+    let onlySvg = svgText.slice(start, end + 6);
+  
+    // Fehlende Namespaces ergänzen (ohne doppelt zu setzen)
+    onlySvg = onlySvg.replace(/<svg([^>]*)>/i, (m, attrs) => {
+      let a = attrs;
+      if (!/xmlns=/.test(a)) a += ' xmlns="http://www.w3.org/2000/svg"';
+      if (!/xmlns:kvg=/.test(a)) a += ' xmlns:kvg="http://kanjivg.tagaini.net"';
+      if (!/xmlns:xlink=/.test(a)) a += ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+      // optional (falls in Datei vorhanden, sonst egal):
+      if (!/xmlns:svg=/.test(a)) a += ' xmlns:svg="http://www.w3.org/2000/svg"';
+      return `<svg${a}>`;
+    });
+  
+    const doc = new DOMParser().parseFromString(onlySvg, 'image/svg+xml');
+    // Falls trotzdem Parserfehler, hier abbrechen:
+    const parseError = doc.querySelector('parsererror');
+    if (parseError) throw new Error(parseError.textContent || 'SVG Parse Error');
+  
+    const svgEl = doc.documentElement;
+  
+    // Keine StrokeNumbers entfernen – du wolltest die Zahlen behalten.
+    // Optional nur wirklich störende Hilfsebenen killen:
+    svgEl.querySelectorAll('[id*="Misc"]').forEach(n => n.remove());
+  
+    const container = document.getElementById('kanji-container');
+    container.replaceChildren(document.importNode(svgEl, true));
+  
+    // Striche animieren (nur Pfade der Striche; Zahlen (<text>) bleiben unberührt)
+    let strokes = container.querySelectorAll('g[id*="StrokePaths"] path');
+    if (!strokes.length) strokes = container.querySelectorAll('path');
+  
+    strokes.forEach((p, i) => {
+      const len = p.getTotalLength?.() ?? 0;
+      if (!len) return;
+      p.style.fill = 'none';
+      p.style.stroke = 'black';
+      p.style.strokeWidth = '5';
+      p.style.strokeLinecap = 'round';
+      p.style.strokeDasharray = String(len);
+      p.style.strokeDashoffset = String(len);
+      setTimeout(() => {
+        p.style.transition = 'stroke-dashoffset 0.5s ease';
+        p.style.strokeDashoffset = '0';
+      }, i * 600);
+    });
+  }
+  
+  // Beispiel:
+  loadKanjiWithNumbers('魚').catch(console.error);
+  
+
+
+
+
