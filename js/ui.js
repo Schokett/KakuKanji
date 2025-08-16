@@ -20,17 +20,6 @@ function markActiveTable(offset = 50, doScroll = true) {
   });
 }
 
-function updateTableSelector() {
-  const tables = document.querySelectorAll(".svg-container");
-  App.selectorEl.innerHTML = '';
-  tables.forEach((table, index) => {
-    const option = document.createElement("option");
-    option.value = table.dataset.tableId;
-    option.textContent = `Tabelle ${index + 1}`;
-    App.selectorEl.appendChild(option);
-  });
-}
-
 function addNewTable() {
   if (!App.svgLoaded) return;
   const container = document.getElementById("svg-pages");
@@ -41,7 +30,7 @@ function addNewTable() {
   wrapper.innerHTML = App.svgTemplateText;
   container.appendChild(wrapper);
 
-  updateTableSelector();
+  renderTableIdentifiers();
   App.selectorEl.value = tableId;
   markActiveTable(50, false);
 }
@@ -60,6 +49,62 @@ function deleteTable() {
   }
   markActiveTable();
 }
+
+// ==============================
+// Tabellen Nummerierung
+// ==============================
+// Ermittelt eine kurze Vorschau (z.B. das Kanji)
+function getTablePreview(tableEl) {
+  const cand = [
+    '#MainKanji', '#Kanjitr', '#Kanjitr1', '#Kanjitr2'
+  ];
+  for (const sel of cand) {
+    const el = tableEl.querySelector(sel);
+    const txt = el?.textContent?.trim();
+    if (txt) return txt.slice(0, 2); // kurz halten
+  }
+  return '';
+}
+
+// Aktualisiert Dropdown-Optionen + Badges auf den Tabellen
+function renderTableIdentifiers() {
+  const tables = document.querySelectorAll('.svg-container');
+
+  // Dropdown neu füllen (mit Nummer + Vorschau)
+  App.selectorEl.innerHTML = '';
+  tables.forEach((table, idx) => {
+    const no = idx + 1;
+    const preview = getTablePreview(table);
+    table.dataset.tableNumber = String(no);
+
+    // Badge erzeugen/aktualisieren
+    let badge = table.querySelector('.table-badge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = 'table-badge';
+      table.appendChild(badge);
+    }
+    badge.textContent = preview ? `#${no} · ${preview}` : `#${no}`;
+
+    // Option im Select
+    const opt = document.createElement('option');
+    opt.value = table.dataset.tableId;            // intern stabil
+    opt.textContent = preview ? `Tabelle ${no} – ${preview}` : `Tabelle ${no}`;
+    App.selectorEl.appendChild(opt);
+  });
+
+  // Falls es eine aktive Tabelle gibt, Auswahl beibehalten
+  // (ansonsten 1. nehmen)
+  const active = document.querySelector('.svg-container.active');
+  if (active) {
+    const id = active.dataset.tableId;
+    const match = [...App.selectorEl.options].find(o => o.value === id);
+    if (match) App.selectorEl.value = id;
+  } else if (App.selectorEl.options.length) {
+    App.selectorEl.value = App.selectorEl.options[0].value;
+  }
+}
+
 
 // ==============================
 // SVG füllen
@@ -178,7 +223,7 @@ window.addEventListener('DOMContentLoaded', () => {
       handle: '.svg-container',
       draggable: '.svg-container',
       onStart: (evt) => evt.item.classList.add('dragging'),
-      onEnd: (evt) => { evt.item.classList.remove('dragging'); updateTableSelector(); markActiveTable(); }
+      onEnd: (evt) => { evt.item.classList.remove('dragging'); renderTableIdentifiers(); markActiveTable(); }
     });
   };
   document.head.appendChild(s);
@@ -500,3 +545,4 @@ window.addEventListener('DOMContentLoaded', () => {
 window.resetTour = () => localStorage.removeItem('seenTourV1');
 window.startTour = () => startTourReal(true); // erzwingt Start
 window.endTour = endTour;
+
