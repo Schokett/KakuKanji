@@ -537,8 +537,5 @@ svg text {
 }
 
 /* Fallback für direktes window.print() oder Browser-Print */
-@media print {
-    .table-badge {
-        display: none !important;
-    }
-}
+.exporting .table-badge { display: none !important; }
+@media print { .table-badge { display: none !important; } }
