@@ -1,0 +1,114 @@
+function ensurePDFLibs() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error('jsPDF ist noch nicht geladen');
+    }
+    if (!window.html2canvas) {
+      throw new Error('html2canvas ist noch nicht geladen');
+    }
+  }
+  
+  async function downloadPDF() {
+    ensurePDFLibs();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("portrait", "mm", "a4");
+  
+    const activeEl = document.querySelector(".svg-container.active");
+    if (activeEl) activeEl.classList.remove("active");
+  
+    try {
+      const containers = document.querySelectorAll(".svg-container");
+      const tablesPerPage = 5;
+      const spacing = 5;
+      const pageWidth = 210, pageHeight = 297, margin = 10;
+      const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
+      const singleHeight = usableHeight / tablesPerPage;
+      const usableWidth = pageWidth - 2 * margin;
+  
+      for (let i = 0; i < containers.length; i++) {
+        const clone = await App.makeOffscreenClone(containers[i]);
+        await App.finalizeKanjiStrokes(clone);
+  
+        if (document.fonts?.ready) { try { await document.fonts.ready; } catch(_){} }
+        document.body.offsetHeight;
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  
+        const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
+        clone.remove();
+  
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidthMm = canvas.width * 0.2646;
+        const imgHeightMm = canvas.height * 0.2646;
+        const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+  
+        const scaledWidth = imgWidthMm * scale;
+        const scaledHeight = imgHeightMm * scale;
+        const columnX = margin + (usableWidth - scaledWidth) / 2;
+        const row = i % tablesPerPage;
+        const columnY = margin + row * (scaledHeight + spacing);
+  
+        if (i > 0 && row === 0) pdf.addPage();
+        pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+      }
+  
+      pdf.save("kanji-raster.pdf");
+    } finally {
+      if (activeEl) activeEl.classList.add("active");
+    }
+  }
+  
+  async function printPDF() {
+    ensurePDFLibs();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("portrait", "mm", "a4");
+  
+    const activeEl = document.querySelector(".svg-container.active");
+    if (activeEl) activeEl.classList.remove("active");
+  
+    try {
+      const containers = document.querySelectorAll(".svg-container");
+      const tablesPerPage = 5;
+      const spacing = 5;
+      const pageWidth = 210, pageHeight = 297, margin = 10;
+      const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
+      const singleHeight = usableHeight / tablesPerPage;
+      const usableWidth = pageWidth - 2 * margin;
+  
+      for (let i = 0; i < containers.length; i++) {
+        const clone = await App.makeOffscreenClone(containers[i]);
+        await App.finalizeKanjiStrokes(clone);
+  
+        if (document.fonts?.ready) { try { await document.fonts.ready; } catch(_){} }
+        document.body.offsetHeight;
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  
+        const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
+        clone.remove();
+  
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidthMm = canvas.width * 0.2646;
+        const imgHeightMm = canvas.height * 0.2646;
+        const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
+  
+        const scaledWidth = imgWidthMm * scale;
+        const scaledHeight = imgHeightMm * scale;
+        const columnX = margin + (usableWidth - scaledWidth) / 2;
+        const row = i % tablesPerPage;
+        const columnY = margin + row * (scaledHeight + spacing);
+  
+        if (i > 0 && row === 0) pdf.addPage();
+        pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
+      }
+  
+      const blob = pdf.output("blob");
+      const url = URL.createObjectURL(blob);
+      const w = window.open(url);
+      w.onload = () => { w.focus(); w.print(); };
+    } finally {
+      if (activeEl) activeEl.classList.add("active");
+    }
+  }
+  
+  // Buttons global verfügbar machen (falls HTML onclick nutzt)
+  window.downloadPDF = downloadPDF;
+  window.printPDF = printPDF;
+  

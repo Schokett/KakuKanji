@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=0.5, user-scalable=yes">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=0.5, user-scalable=yes">
     <title>Kanji-Raster Generator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,18 +87,21 @@
                     <div class="import-container">
                         <button type="button" id="importBtn">
                             <!-- Importieren-Icon -->
-                            <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 36 36"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <g>
-                                    <path d="M28,4H14.87L8,10.86V15h2V13.61h7.61V6H28V30H8a2,2,0,0,0,2,2H28a2,2,0,0,0,2-2V6A2,2,0,0,0,28,4ZM16,12H10v-.32L15.7,6H16Z"/>
-                                    <path d="M11.94,26.28a1,1,0,1,0,1.41,1.41L19,22l-5.68-5.68a1,1,0,0,0-1.41,1.41L15.2,21H3a1,1,0,1,0,0,2H15.23Z"/>
+                                    <path
+                                        d="M28,4H14.87L8,10.86V15h2V13.61h7.61V6H28V30H8a2,2,0,0,0,2,2H28a2,2,0,0,0,2-2V6A2,2,0,0,0,28,4ZM16,12H10v-.32L15.7,6H16Z" />
+                                    <path
+                                        d="M11.94,26.28a1,1,0,1,0,1.41,1.41L19,22l-5.68-5.68a1,1,0,0,0-1.41,1.41L15.2,21H3a1,1,0,1,0,0,2H15.23Z" />
                                 </g>
                             </svg>
                             Importieren
                         </button>
                     </div>
-                    
-                    
-                    
+
+
+
                 </div>
                 <!-- Icon + Tooltip als eigener Container -->
                 <div class="info-container">
@@ -135,17 +139,18 @@
             <div id="svg-pages">
                 <!-- Hier erscheinen mehrere SVGs -->
             </div>
-            
+
             <button type="button" id="deleteAllBtn">
-                <svg class="icon white"
-                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                     viewBox="0 0 256 256">
-                    <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+                <svg class="icon white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                        d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z">
+                    </path>
                 </svg>
                 Alle Tabellen löschen
             </button>
-            
-            
+
+
         </div>
     </main>
 
@@ -165,7 +170,12 @@
     </a>
 
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <script src="js/state.js"></script>
+    <script src="js/kanjivg.js"></script>
+    <script src="js/pdf.js"></script>
+    <script src="js/ui.js"></script>
+
 
 </body>
 
