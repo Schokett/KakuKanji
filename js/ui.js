@@ -1,19 +1,24 @@
 // Tabellen-UI, Inputs, Import, Sortable, Fill
 
-function markActiveTable(offset = 50) {
-    const selectedId = App.selectorEl.value;
-    const allTables = document.querySelectorAll(".svg-container");
-  
-    allTables.forEach(table => {
-      if (table.dataset.tableId === selectedId) {
-        table.classList.add("active");
+function markActiveTable(offset = 50, doScroll = true) {
+  const selectedId = App.selectorEl.value;
+  const allTables = document.querySelectorAll(".svg-container");
+
+  allTables.forEach(table => {
+    if (table.dataset.tableId === selectedId) {
+      table.classList.add("active");
+
+      // nur scrollen, wenn gewünscht
+      if (doScroll) {
         const tableTop = table.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({ top: tableTop - offset, behavior: 'smooth' });
-      } else {
-        table.classList.remove("active");
       }
-    });
-  }
+    } else {
+      table.classList.remove("active");
+    }
+  });
+}
+
   
   function updateTableSelector() {
     const tables = document.querySelectorAll(".svg-container");
@@ -38,7 +43,7 @@ function markActiveTable(offset = 50) {
   
     updateTableSelector();
     App.selectorEl.value = tableId;
-    markActiveTable();
+    markActiveTable(50, false);
   }
   
   function deleteTable() {
