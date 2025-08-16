@@ -1,13 +1,13 @@
-// Externe Libs laden (ohne Sortable — das macht ui.js exakt einmal)
-[
-    "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
-    "https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"
-  ].forEach(src => {
-    const s = document.createElement('script');
-    s.src = src; s.async = false;
-    document.head.appendChild(s);
-  });
+// // Externe Libs laden (ohne Sortable — das macht ui.js exakt einmal)
+// [
+//     "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+//     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+//     "https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"
+//   ].forEach(src => {
+//     const s = document.createElement('script');
+//     s.src = src; s.async = false;
+//     document.head.appendChild(s);
+//   });
   
   // Globale Zustände
   window.App = {
@@ -42,4 +42,11 @@
       App.svgLoaded = true;
     })
     .catch(console.error);
+
+    window.App = window.App || {};
+    App.svgTemplateText = App.svgTemplateText || "";
+    App.svgLoaded = App.svgLoaded || false;
+    App.tableCount = App.tableCount || 0;
+    App.selectorEl = App.selectorEl || document.getElementById("tableSelector");
+    
   
