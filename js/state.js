@@ -1,15 +1,4 @@
-// // Externe Libs laden (ohne Sortable — das macht ui.js exakt einmal)
-// [
-//     "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
-//     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
-//     "https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"
-//   ].forEach(src => {
-//     const s = document.createElement('script');
-//     s.src = src; s.async = false;
-//     document.head.appendChild(s);
-//   });
-  
-  // Globale Zustände
+    // Globale Zustände
   window.App = {
     svgTemplateText: "",
     svgLoaded: false,

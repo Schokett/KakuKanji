@@ -108,7 +108,6 @@ function ensurePDFLibs() {
     }
   }
   
-  // Buttons global verfügbar machen (falls HTML onclick nutzt)
   window.downloadPDF = downloadPDF;
   window.printPDF = printPDF;
   
