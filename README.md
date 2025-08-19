@@ -50,11 +50,15 @@ cd KakuKanji
 
 
 
-## Datenquellen & Lizenzhinweise
+Klar! Hier ist eine saubere englische Version deines Textes:
 
-https://schokett.github.io/KakuKanji/
+---
 
+## Data Sources & License Notices
 
-Dieses Projekt verwendet Kanji-Daten & SVGs aus dem [KanjiVG](https://kanjivg.tagaini.net/) Projekt.  
-© 2009–2025 Ulrich Apel – Lizenz: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).  
-Änderungen: Formatierung & Integration in diese Website.
+[https://schokett.github.io/KakuKanji/](https://schokett.github.io/KakuKanji/)
+
+This project uses Kanji data & SVGs from the KanjiVG project.
+© 2009–2025 Ulrich Apel – License: CC BY-SA 3.0.
+Modifications: formatting & integration into this website.
+
