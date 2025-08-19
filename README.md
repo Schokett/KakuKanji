@@ -46,11 +46,6 @@ cd KakuKanji
 
 4. View animated stroke orders and export PDFs as needed
 
----
-
-
-
-Klar! Hier ist eine saubere englische Version deines Textes:
 
 ---
 
