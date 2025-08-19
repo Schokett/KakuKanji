@@ -7,6 +7,7 @@ Interactive tool for learning Kanji with animated stroke order, Excel/XLS import
 ## Live Demo
 
 [https://schokett.github.io/KakuKanji/](https://schokett.github.io/KakuKanji/)
+
 ![Description of image](assets/ScreenshotLiveDemo.png)
 ---
 
