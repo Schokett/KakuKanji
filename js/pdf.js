@@ -1,130 +1,3 @@
-// function ensurePDFLibs() {
-//     if (!window.jspdf || !window.jspdf.jsPDF) {
-//       throw new Error('jsPDF ist noch nicht geladen');
-//     }
-//     if (!window.html2canvas) {
-//       throw new Error('html2canvas ist noch nicht geladen');
-//     }
-//   }
-
-//   async function downloadPDF() {
-//     ensurePDFLibs();
-//     const { jsPDF } = window.jspdf;
-//     const pdf = new jsPDF("portrait", "mm", "a4");
-
-//     const activeEl = document.querySelector(".svg-container.active");
-//     if (activeEl) activeEl.classList.remove("active");
-
-//     try {
-//       const containers = document.querySelectorAll(".svg-container");
-//       const tablesPerPage = 5;
-//       const spacing = 5;
-//       const pageWidth = 210, pageHeight = 297, margin = 10;
-//       const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
-//       const singleHeight = usableHeight / tablesPerPage;
-//       const usableWidth = pageWidth - 2 * margin;
-
-//       for (let i = 0; i < containers.length; i++) {
-//         const clone = await App.makeOffscreenClone(containers[i]);
-//         await App.finalizeKanjiStrokes(clone);
-
-//         if (document.fonts?.ready) { try { await document.fonts.ready; } catch(_){} }
-//         document.body.offsetHeight;
-//         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-//         const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
-//         clone.remove();
-
-//         const imgData = canvas.toDataURL("image/png");
-//         const imgWidthMm = canvas.width * 0.2646;
-//         const imgHeightMm = canvas.height * 0.2646;
-//         const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
-
-//         const scaledWidth = imgWidthMm * scale;
-//         const scaledHeight = imgHeightMm * scale;
-//         const columnX = margin + (usableWidth - scaledWidth) / 2;
-//         const row = i % tablesPerPage;
-//         const columnY = margin + row * (scaledHeight + spacing);
-
-//         if (i > 0 && row === 0) pdf.addPage();
-//         pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
-//       }
-
-//       pdf.save("kanji-raster.pdf");
-//     } finally {
-//       if (activeEl) activeEl.classList.add("active");
-//     }
-//   }
-
-//   async function printPDF() {
-//     ensurePDFLibs();
-//     const { jsPDF } = window.jspdf;
-//     const pdf = new jsPDF("portrait", "mm", "a4");
-
-//     const activeEl = document.querySelector(".svg-container.active");
-//     if (activeEl) activeEl.classList.remove("active");
-
-//     try {
-//       const containers = document.querySelectorAll(".svg-container");
-//       const tablesPerPage = 5;
-//       const spacing = 5;
-//       const pageWidth = 210, pageHeight = 297, margin = 10;
-//       const usableHeight = pageHeight - 2 * margin - (spacing * (tablesPerPage - 1));
-//       const singleHeight = usableHeight / tablesPerPage;
-//       const usableWidth = pageWidth - 2 * margin;
-
-//       for (let i = 0; i < containers.length; i++) {
-//         const clone = await App.makeOffscreenClone(containers[i]);
-//         await App.finalizeKanjiStrokes(clone);
-
-//         if (document.fonts?.ready) { try { await document.fonts.ready; } catch(_){} }
-//         document.body.offsetHeight;
-//         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-//         const canvas = await html2canvas(clone, { useCORS: true, scale: 2 });
-//         clone.remove();
-
-//         const imgData = canvas.toDataURL("image/png");
-//         const imgWidthMm = canvas.width * 0.2646;
-//         const imgHeightMm = canvas.height * 0.2646;
-//         const scale = Math.min(usableWidth / imgWidthMm, singleHeight / imgHeightMm);
-
-//         const scaledWidth = imgWidthMm * scale;
-//         const scaledHeight = imgHeightMm * scale;
-//         const columnX = margin + (usableWidth - scaledWidth) / 2;
-//         const row = i % tablesPerPage;
-//         const columnY = margin + row * (scaledHeight + spacing);
-
-//         if (i > 0 && row === 0) pdf.addPage();
-//         pdf.addImage(imgData, "PNG", columnX, columnY, scaledWidth, scaledHeight);
-//       }
-
-//       const blob = pdf.output("blob");
-//       const url = URL.createObjectURL(blob);
-//       const w = window.open(url);
-//       w.onload = () => { w.focus(); w.print(); };
-//     } finally {
-//       if (activeEl) activeEl.classList.add("active");
-//     }
-//   }
-
-//   window.downloadPDF = downloadPDF;
-//   window.printPDF = printPDF;
-
-// pdf.js – Export & Druck als PDF über html2canvas + jsPDF
-// --------------------------------------------------------
-// Hinweis: Für perfekte Vektorqualität müsste direktes SVG -> PDF Rendering erfolgen.
-//          Hier wird aus Kompatibilitätsgründen Canvas (Raster) verwendet.
-// pdf.js – Export & Druck (Vector bevorzugt via svg2pdf.js, sonst Raster via html2canvas + jsPDF)
-
-// ---- Welche <text>-Elemente im SVG dürfen ins PDF? (Whitelist nach IDs) ----
-// pdf.js – Export & Druck (Vector bevorzugt; Raster Fallback)
-// ----------------------------------------------------------
-// Ziele:
-// - Strichfolge finalisieren (App.finalizeKanjiStrokes)
-// - Tabellen-Nummer/Badge niemals exportieren
-// - Vektor (svg2pdf) wenn vorhanden, sonst hochauflösendes Raster (html2canvas)
-
 const KEEP_TEXT_IDS = new Set([
   "MainKanji",
   "OnLesung",
@@ -140,7 +13,7 @@ function ensurePDFLibs(mode = "auto") {
     throw new Error("jsPDF ist noch nicht geladen");
   }
   if ((mode === "raster" || mode === "auto") && typeof window.html2canvas !== "function") {
-    // Im Auto-Mode nur warnen, wir versuchen evtl. Vector
+    
     if (mode === "raster") throw new Error("html2canvas ist noch nicht geladen");
   }
   if (mode === "vector" && typeof window.svg2pdf !== "function") {
@@ -232,7 +105,7 @@ async function renderAllTablesToPdfPagesVector(pdf) {
     window.svg2pdf(cleanSvg, pdf, {
       x, y, width: scaledWidth, height: scaledHeight,
       useCSS: true
-      // -> Wenn du Fonts einbetten/mapen willst, hier optional fontCallback setzen
+    
     });
   }
 }
@@ -264,7 +137,7 @@ async function renderAllTablesToPdfPagesRaster(pdf) {
     document.body.offsetHeight;
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    // Hochauflösendes Raster (scale=3 ist guter Kompromiss)
+    // Hochauflösendes Raster
     const canvas = await html2canvas(host, { useCORS: true, scale: 3 });
     host.remove();
 
