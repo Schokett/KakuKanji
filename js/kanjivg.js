@@ -124,7 +124,7 @@ async function getKanjiVGGroup(kanji) {
     return clone;
   }
   
-  // Export ins globale App-Namespace (falls du’s woanders brauchst)
+  // Export ins globale App-Namespace
   App.injectKanjiIntoMain = injectKanjiIntoMain;
   App.finalizeKanjiStrokes = finalizeKanjiStrokes;
   App.makeOffscreenClone = makeOffscreenClone;
